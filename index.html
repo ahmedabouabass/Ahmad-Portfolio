@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ===== Basic page settings ===== -->
+  <meta charset="UTF-8">
+  <!-- Makes the page scale correctly on phones and tablets -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ahmad Abou Abass | Educator · Cambridge Curriculum · EAL Specialist</title>
+  <meta name="description" content="Portfolio of Ahmad Abou Abass, a primary educator and EAL specialist with over ten years of experience across the Cambridge, British, IB and American curricula.">
+  <meta name="theme-color" content="#1B2A41">
+
+  <!-- Small "A" icon shown in the browser tab -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231B2A41'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-size='38' fill='%23C9974B'%3EA%3C/text%3E%3C/svg%3E">
+
+  <!-- Fonts from Google Fonts: Playfair Display (headings) and Inter (body text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+
+  <!-- Our own styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Tells the CSS that JavaScript is running (used for the fade-in animations) -->
+  <script>document.documentElement.classList.add("js");</script>
+  <!-- Our own JavaScript. "defer" means it runs after the page has loaded. -->
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <!-- Accessibility: lets keyboard users jump straight past the menu -->
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- =====================================================
+       SECTION 1: HEADER / NAVIGATION BAR
+       ===================================================== -->
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#home" aria-label="Ahmad Abou Abass, back to top">
+        <span class="logo-mark" aria-hidden="true">A</span>
+        <span class="logo-text">Ahmad Abou Abass</span>
+      </a>
+
+      <!-- Menu button: only visible on small screens -->
+      <button class="nav-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden">Open menu</span>
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Main">
+        <ul class="nav-list">
+          <li><a class="nav-link" href="#home">Home</a></li>
+          <li><a class="nav-link" href="#about">About</a></li>
+          <li><a class="nav-link" href="#experience">Experience</a></li>
+          <li><a class="nav-link" href="#education">Qualifications</a></li>
+          <li><a class="nav-link" href="#philosophy">Philosophy</a></li>
+          <li><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- =====================================================
+         SECTION 2: HERO (the first thing visitors see)
+         ===================================================== -->
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <p class="eyebrow reveal">Primary Educator &amp; EAL Specialist</p>
+          <!-- The surname sits on its own line for a balanced, two-line heading -->
+          <h1 class="hero-title reveal" id="hero-title">
+            Ahmad <span class="hero-title-surname">Abou Abass</span>
+          </h1>
+          <p class="hero-subtitle reveal">
+            Educator <span aria-hidden="true">·</span> Cambridge Curriculum <span aria-hidden="true">·</span> EAL Specialist
+          </p>
+          <p class="hero-tagline reveal">
+            Ten years of primary teaching. Four curricula. Every learner included.
+          </p>
+
+          <div class="hero-actions reveal">
+            <!-- Main call to action. The CV link is controlled in script.js -->
+            <a class="btn btn--primary btn--large" href="cv/Ahmad-CV.pdf" data-cv-link>
+              <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Download CV
+            </a>
+            <a class="btn btn--secondary" href="#contact">Get in touch</a>
+            <a class="btn btn--ghost" href="#experience">View my experience</a>
+          </div>
+
+          <!-- Confirmed qualifications only -->
+          <ul class="hero-credentials reveal" aria-label="Key qualifications">
+            <li>BA in TESL</li>
+            <li>Teaching Diploma</li>
+            <li>Training of Trainers, University of London</li>
+            <li>MSc Mental Health &amp; Wellbeing (in progress)</li>
+          </ul>
+        </div>
+
+        <!-- =================================================
+             PORTRAIT AREA
+             TO CHANGE YOUR PHOTO LATER:
+             Replace images/ahmad-abou-abass.jpg with a new photo
+             of the same name (portrait shape, ideally at least
+             800 × 1000 pixels), then update width and height
+             below to the new photo's size.
+             ================================================= -->
+        <div class="hero-photo reveal">
+          <div class="photo-frame">
+            <img class="photo-image" src="images/ahmad-abou-abass.jpg" alt="Portrait of Ahmad Abou Abass" width="413" height="531">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 3: ABOUT ME
+         DRAFT TEXT: written only from Ahmad's confirmed facts.
+         Ahmad should review and personalise it.
+         ===================================================== -->
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="container">
+        <header class="section-header reveal">
+          <p class="section-number">01 — About</p>
+          <h2 class="section-title" id="about-title">About Me</h2>
+        </header>
+
+        <div class="about-grid">
+          <div class="about-text reveal">
+            <p class="lead">
+              I am a primary educator with over ten years of classroom experience in Riyadh, across the
+              Cambridge, British, IB and American curricula, and I specialise in supporting learners who
+              use English as an Additional Language (EAL).
+            </p>
+            <p>
+              My training in Teaching English as a Second Language, together with my Teaching Diploma,
+              shapes how I plan lessons that are clear, structured and accessible to every learner.
+              As a certified trainer (Training of Trainers, University of London), I also enjoy
+              sharing practice and supporting colleagues.
+            </p>
+            <p>
+              I am currently studying for an MSc in Psychology of Mental Health and Wellbeing, which deepens my
+              understanding of how learners think, feel and grow — inside and outside the classroom.
+            </p>
+          </div>
+
+          <aside class="about-card reveal" aria-label="At a glance">
+            <h3 class="about-card-title">At a glance</h3>
+            <ul class="fact-list">
+              <li><span class="fact-label">Role</span><span>Primary Educator</span></li>
+              <li><span class="fact-label">Experience</span><span>10+ years</span></li>
+              <li><span class="fact-label">Curriculum</span><span>Cambridge · British · IB · American</span></li>
+              <li><span class="fact-label">Specialism</span><span>EAL learners</span></li>
+              <li><span class="fact-label">Studying</span><span>MSc Mental Health &amp; Wellbeing</span></li>
+              <li><span class="fact-label">Based in</span><span>Riyadh, Saudi Arabia</span></li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 4: EXPERIENCE (timeline)
+         ===================================================== -->
+    <section class="section section--tinted" id="experience" aria-labelledby="experience-title">
+      <div class="container">
+        <header class="section-header reveal">
+          <p class="section-number">02 — Experience</p>
+          <h2 class="section-title" id="experience-title">Experience</h2>
+        </header>
+
+        <ol class="timeline">
+          <!-- Each role is one <li class="timeline-item">. Newest role first. -->
+          <li class="timeline-item reveal">
+            <p class="timeline-date">Aug 2024 – Jul 2026</p>
+            <h3 class="timeline-role">Grade 4 Homeroom Teacher</h3>
+            <p class="timeline-place">Riyadh Schools Football Academy · Riyadh, KSA</p>
+            <ul class="timeline-points">
+              <li>Taught homeroom subjects following the Cambridge International Curriculum with engaging, student-centred lessons.</li>
+              <li>Adapted learning for EAL learners and differentiated to challenge high-potential and talented students.</li>
+              <li>Led and organised student assemblies, and provided detailed weekly progress reports to parents.</li>
+            </ul>
+          </li>
+
+          <li class="timeline-item reveal">
+            <p class="timeline-date">Aug 2023 – Aug 2024</p>
+            <h3 class="timeline-role">Key Stage 2 Teacher</h3>
+            <p class="timeline-place">Reigate Grammar School Riyadh · Riyadh, KSA</p>
+            <ul class="timeline-points">
+              <li>Taught Year 6 English, Maths, Science, Topic and PSHE under the British National Curriculum.</li>
+              <li>Designed cross-curricular lessons that built students' reading, writing and comprehension skills.</li>
+            </ul>
+          </li>
+
+          <li class="timeline-item reveal">
+            <p class="timeline-date">Aug 2020 – Jul 2023</p>
+            <h3 class="timeline-role">Homeroom Teacher (Grades 4 &amp; 5)</h3>
+            <p class="timeline-place">King Faisal School · Riyadh, KSA</p>
+            <ul class="timeline-points">
+              <li>Delivered inquiry-based learning within the IB Primary Years Programme (PYP).</li>
+              <li>Used Kahoot and Nearpod to strengthen engagement and assessment.</li>
+              <li>Prepared students for the PYP Exhibition, developing research and presentation skills.</li>
+            </ul>
+          </li>
+
+          <li class="timeline-item reveal">
+            <p class="timeline-date">Aug 2015 – May 2020</p>
+            <h3 class="timeline-role">English &amp; Social Studies Teacher</h3>
+            <p class="timeline-place">Khaled International School · Riyadh, KSA</p>
+            <ul class="timeline-points">
+              <li>Taught English and Social Studies across multiple middle school grade and proficiency levels.</li>
+              <li>Applied ESL strategies to support language acquisition and student confidence.</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 5: EDUCATION & QUALIFICATIONS (cards)
+         ===================================================== -->
+    <section class="section" id="education" aria-labelledby="education-title">
+      <div class="container">
+        <header class="section-header reveal">
+          <p class="section-number">03 — Qualifications</p>
+          <h2 class="section-title" id="education-title">Education &amp; Qualifications</h2>
+        </header>
+
+        <ul class="card-grid">
+          <li class="card reveal">
+            <span class="card-badge card-badge--progress">In progress</span>
+            <h3 class="card-title">MSc Psychology of Mental Health and Wellbeing</h3>
+            <p class="card-meta">University of Wolverhampton</p>
+            <p class="card-meta">2026 – 2028</p>
+          </li>
+
+          <li class="card reveal">
+            <h3 class="card-title">Training of Trainers Certificate</h3>
+            <p class="card-meta">University of London</p>
+          </li>
+
+          <li class="card reveal">
+            <h3 class="card-title">Teaching Diploma</h3>
+            <p class="card-subtitle">RQF Level 6</p>
+            <p class="card-meta">American University of Science and Technology</p>
+            <p class="card-meta">Oct 2020 – Jun 2021</p>
+          </li>
+
+          <li class="card reveal">
+            <h3 class="card-title">BA in TESL</h3>
+            <p class="card-subtitle">Teaching English as a Second Language · RQF Level 6</p>
+            <p class="card-meta">Lebanese International University (LIU)</p>
+            <p class="card-meta">2012 – 2015</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 6: TEACHING PHILOSOPHY & CORE COMPETENCIES
+         DRAFT TEXT: Ahmad should review and personalise it.
+         ===================================================== -->
+    <section class="section section--dark" id="philosophy" aria-labelledby="philosophy-title">
+      <div class="container">
+        <header class="section-header reveal">
+          <p class="section-number">04 — Philosophy</p>
+          <h2 class="section-title" id="philosophy-title">Teaching Philosophy &amp; Core Competencies</h2>
+        </header>
+
+        <blockquote class="philosophy-quote reveal">
+          <p>
+            Every learner deserves to feel understood, supported and capable. I aim to create a calm,
+            structured classroom where language is never a barrier to learning, and where wellbeing
+            and achievement grow together.
+          </p>
+        </blockquote>
+
+        <ul class="competency-grid">
+          <li class="competency reveal">
+            <svg class="competency-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5h16v11H8l-4 4V5Z M8 9h8 M8 12h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3 class="competency-title">EAL Support</h3>
+            <p>Helping learners of English access the curriculum and grow in confidence.</p>
+          </li>
+          <li class="competency reveal">
+            <svg class="competency-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <h3 class="competency-title">Learner Wellbeing</h3>
+            <p>Caring for each learner as a whole person, informed by my studies in psychology.</p>
+          </li>
+          <li class="competency reveal">
+            <svg class="competency-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7l9-4 9 4-9 4-9-4Z M7 9v5c0 1.7 2.2 3 5 3s5-1.3 5-3V9 M21 7v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3 class="competency-title">Cambridge Curriculum</h3>
+            <p>Planning and teaching within the Cambridge curriculum framework.</p>
+          </li>
+          <li class="competency reveal">
+            <svg class="competency-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6 M16 5.5a3 3 0 0 1 0 5.5 M18 14.5c1.8.8 3 2.6 3 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3 class="competency-title">Teacher Training</h3>
+            <p>Certified to train fellow educators and share effective classroom practice.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 7: CONTACT
+         Email and LinkedIn are set in script.js (SITE_SETTINGS)
+         ===================================================== -->
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <div class="container contact-inner">
+        <header class="section-header section-header--center reveal">
+          <p class="section-number">05 — Contact</p>
+          <h2 class="section-title" id="contact-title">Contact</h2>
+          <p class="section-intro">
+            Let's work together. I would be glad to hear from schools and colleagues. The best way to reach me is by email or LinkedIn.
+          </p>
+        </header>
+
+        <ul class="contact-grid">
+          <li class="reveal">
+            <a class="contact-card" href="#contact" data-contact="email">
+              <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18v12H3V6Zm0 0 9 7 9-7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+              <span class="contact-label">Email</span>
+              <span class="contact-value" data-contact-text="email"><span class="placeholder placeholder--small">[PLACEHOLDER: Email address]</span></span>
+            </a>
+          </li>
+          <li class="reveal">
+            <a class="contact-card" href="#contact" data-contact="linkedin">
+              <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 9h3.5v11H4V9Zm1.75-5.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM10 9h3.3v1.6c.5-.9 1.7-1.9 3.6-1.9 3.6 0 4.1 2.3 4.1 5.3V20h-3.5v-5.2c0-1.3 0-2.9-1.8-2.9s-2.1 1.4-2.1 2.8V20H10V9Z" fill="currentColor"/></svg>
+              <span class="contact-label">LinkedIn</span>
+              <span class="contact-value" data-contact-text="linkedin"><span class="placeholder placeholder--small">[PLACEHOLDER: LinkedIn URL]</span></span>
+            </a>
+          </li>
+          <li class="reveal">
+            <a class="contact-card" href="cv/Ahmad-CV.pdf" data-cv-link>
+              <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h8l4 4v14H6V3Zm8 0v4h4 M12 10v7m0 0-3-3m3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="contact-label">Curriculum Vitae</span>
+              <span class="contact-value">Download CV (PDF)</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================
+       SECTION 8: FOOTER
+       ===================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-name">Ahmad Abou Abass <span aria-hidden="true">·</span> Educator</p>
+      <ul class="footer-links">
+        <li><a href="#contact" data-contact="email">Email</a></li>
+        <li><a href="#contact" data-contact="linkedin">LinkedIn</a></li>
+        <li><a href="cv/Ahmad-CV.pdf" data-cv-link>CV</a></li>
+        <li><a href="#home">Back to top ↑</a></li>
+      </ul>
+      <p class="footer-copy">&copy; <span id="current-year">2026</span> Ahmad Abou Abass. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Small pop-up message area (used for "coming soon" notices).
+       aria-live means screen readers will read the message aloud. -->
+  <div class="notice" id="site-notice" role="status" aria-live="polite"></div>
+</body>
+</html>

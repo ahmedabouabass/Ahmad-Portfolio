@@ -1,0 +1,1138 @@
+/* =========================================================
+   styles.css — the look of Ahmad's portfolio
+   ---------------------------------------------------------
+   Contents:
+   1.  Design settings (colours, fonts, spacing)
+   2.  Basic reset and page defaults
+   3.  Reusable helpers (container, buttons, placeholders)
+   4.  Header and navigation
+   5.  Hero
+   6.  Shared section styles
+   7.  About
+   8.  Experience timeline
+   9.  Education cards
+   10. Philosophy & competencies
+   11. Contact
+   12. Footer
+   13. Pop-up notice
+   14. Fade-in animations
+   15. Screen sizes (small phones, tablet, desktop)
+   16. Reduced motion (accessibility)
+   ========================================================= */
+
+
+/* ---------- 1. Design settings ----------
+   Change a colour or font here and it updates everywhere. */
+:root {
+  /* Colours */
+  --color-navy:        #1B2A41;  /* main brand colour */
+  --color-navy-deep:   #111C2E;  /* footer, darkest areas */
+  --color-gold:        #C9974B;  /* warm accent (buttons, details) */
+  --color-gold-dark:   #8A6420;  /* gold for small text on light backgrounds */
+  --color-ink:         #1F2933;  /* main text */
+  --color-muted:       #52606D;  /* secondary text */
+  --color-bg:          #FAF8F5;  /* warm ivory page background */
+  --color-bg-tint:     #F3EFE8;  /* slightly darker background for alternate sections */
+  --color-surface:     #FFFFFF;  /* cards */
+  --color-line:        #E6E1D8;  /* thin borders */
+
+  /* Fonts */
+  --font-heading: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body:    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+  /* Spacing and shapes */
+  --container-width: 1120px;
+  --section-space:   clamp(4.5rem, 10vw, 7.5rem);
+  --radius:          14px;
+  --radius-small:    8px;
+  --shadow-soft:     0 1px 2px rgba(17, 28, 46, 0.04), 0 8px 24px rgba(17, 28, 46, 0.06);
+  --shadow-lift:     0 2px 4px rgba(17, 28, 46, 0.06), 0 16px 40px rgba(17, 28, 46, 0.10);
+  --header-height:   72px;
+  --ease:            cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* ---------- 2. Basic reset and page defaults ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* widths include padding, which makes layout predictable */
+}
+
+html {
+  scroll-behavior: smooth;                         /* smooth scrolling for menu links */
+  scroll-padding-top: calc(var(--header-height) + 16px); /* stops the fixed header covering headings */
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--color-ink);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Stops the page scrolling behind the open mobile menu */
+body.menu-open {
+  overflow: hidden;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-navy);
+  margin: 0;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+svg {
+  display: block;
+}
+
+/* Clear focus outline for keyboard users (accessibility) */
+:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+
+/* ---------- 3. Reusable helpers ---------- */
+
+/* Centres content and keeps it from getting too wide */
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Hidden visually, but still read by screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* "Skip to main content" link: appears only when focused with the keyboard */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 200;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-navy);
+  color: #fff;
+  border-radius: var(--radius-small);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease),
+              background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn--large {
+  padding: 1rem 1.75rem;
+  font-size: 1rem;
+}
+
+/* Gold: the main button (Download CV) */
+.btn--primary {
+  background-color: var(--color-gold);
+  color: var(--color-navy-deep);
+  box-shadow: 0 6px 20px rgba(201, 151, 75, 0.35);
+}
+
+.btn--primary:hover {
+  background-color: #D4A65E;
+  box-shadow: 0 10px 28px rgba(201, 151, 75, 0.45);
+}
+
+/* Navy: secondary button */
+.btn--secondary {
+  background-color: var(--color-navy);
+  color: #fff;
+}
+
+.btn--secondary:hover {
+  background-color: var(--color-navy-deep);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Outline: quiet third button */
+.btn--ghost {
+  border-color: var(--color-line);
+  color: var(--color-navy);
+  background: transparent;
+}
+
+.btn--ghost:hover {
+  border-color: var(--color-navy);
+}
+
+.btn-icon {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+/* Placeholders: highlighted so missing information is easy to spot */
+.placeholder {
+  display: inline-block;
+  padding: 0.05em 0.45em;
+  font-family: var(--font-body);
+  font-size: 0.85em;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 1.5;
+  color: #7A5300;
+  background-color: #FFF4D6;
+  border: 1px dashed #D9A93F;
+  border-radius: 6px;
+}
+
+.placeholder--small {
+  font-size: 0.8rem;
+}
+
+
+/* ---------- 4. Header and navigation ---------- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background-color: rgba(250, 248, 245, 0.85);
+  backdrop-filter: blur(12px);           /* frosted-glass effect */
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Added by script.js once the visitor scrolls down */
+.site-header.is-scrolled {
+  border-bottom-color: var(--color-line);
+  box-shadow: 0 4px 20px rgba(17, 28, 46, 0.05);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+}
+
+.logo-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background-color: var(--color-navy);
+  color: var(--color-gold);
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+}
+
+.logo-text {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+/* Menu ("hamburger") button — mobile only */
+.nav-toggle {
+  position: relative;
+  z-index: 110;
+  display: grid;
+  place-items: center;
+  width: 44px;   /* 44px = comfortable tap size on phones */
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+/* Three lines drawn with one element and its ::before / ::after */
+.nav-toggle-bars,
+.nav-toggle-bars::before,
+.nav-toggle-bars::after {
+  display: block;
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--color-navy);
+  transition: transform 0.3s var(--ease), background-color 0.2s ease;
+}
+
+.nav-toggle-bars {
+  position: relative;
+}
+
+.nav-toggle-bars::before,
+.nav-toggle-bars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.nav-toggle-bars::before { top: -6px; }
+.nav-toggle-bars::after  { top: 6px; }
+
+/* When the menu is open, the three lines turn into an "X" */
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars {
+  background-color: transparent;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars::before {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Mobile menu panel: hidden above the screen until opened */
+.primary-nav {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  height: calc(100vh - var(--header-height));
+  height: calc(100dvh - var(--header-height));
+  padding: 2rem 1.5rem;
+  background-color: var(--color-bg);
+  border-top: 1px solid var(--color-line);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-12px);
+  transition: opacity 0.3s ease, transform 0.3s var(--ease), visibility 0.3s;
+}
+
+.primary-nav.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  display: block;
+  padding: 0.85rem 0;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  color: var(--color-navy);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.nav-link.is-active {
+  color: var(--color-gold-dark);
+}
+
+
+/* ---------- 5. Hero ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  /* Top space = header height + breathing room; bottom slightly less than other sections */
+  padding: calc(var(--header-height) + clamp(2.5rem, 6vw, 4.5rem)) 0 clamp(4rem, 8vw, 6rem);
+  /* Soft glows in the background for depth */
+  background:
+    radial-gradient(60rem 30rem at 85% 10%, rgba(201, 151, 75, 0.12), transparent 60%),
+    radial-gradient(40rem 30rem at 0% 100%, rgba(27, 42, 65, 0.06), transparent 60%),
+    var(--color-bg);
+}
+
+.hero-inner {
+  display: grid;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+/* Keeps the text block a comfortable reading width */
+.hero-content {
+  max-width: 38rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold-dark);
+}
+
+/* Small gold line before the eyebrow text */
+.eyebrow::before {
+  content: "";
+  width: 2.25rem;
+  height: 1px;
+  background-color: var(--color-gold);
+}
+
+/* The name: sized to fit "Ahmad Abou Abass" on two balanced lines */
+.hero-title {
+  font-size: clamp(2.9rem, 7.5vw, 5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  margin-bottom: 1.25rem;
+}
+
+/* Surname on its own line, in the elegant italic of the same font */
+.hero-title-surname {
+  display: block;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.hero-subtitle {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-weight: 500;
+  color: var(--color-navy);
+  margin-bottom: 0.85rem;
+}
+
+.hero-tagline {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--color-muted);
+  margin-bottom: 2rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Row of qualifications under the buttons, separated by a thin line */
+.hero-credentials {
+  display: grid;
+  gap: 0.6rem 1.5rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-line);
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.hero-credentials li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+/* Small gold diamond before each qualification */
+.hero-credentials li::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background-color: var(--color-gold);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* Hero items fade in one after another (a "stagger") */
+.hero-content > .reveal:nth-child(2) { transition-delay: 0.08s; }
+.hero-content > .reveal:nth-child(3) { transition-delay: 0.16s; }
+.hero-content > .reveal:nth-child(4) { transition-delay: 0.24s; }
+.hero-content > .reveal:nth-child(5) { transition-delay: 0.32s; }
+.hero-content > .reveal:nth-child(6) { transition-delay: 0.40s; }
+.hero-photo.reveal                   { transition-delay: 0.20s; }
+
+/* ----- Portrait area ----- */
+.hero-photo {
+  position: relative;
+  isolation: isolate; /* keeps the gold outline layered just behind the frame */
+  justify-self: center;
+  width: min(100%, 360px);
+}
+
+/* Thin gold outline offset behind the frame */
+.hero-photo::before {
+  content: "";
+  position: absolute;
+  inset: 14px -14px -14px 14px;
+  z-index: -1;
+  border: 1px solid var(--color-gold);
+  border-radius: 200px 200px var(--radius) var(--radius);
+}
+
+.photo-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  aspect-ratio: 4 / 5;                /* portrait shape: 4 wide, 5 tall */
+  overflow: hidden;                   /* keeps the photo inside the arch */
+  border-radius: 200px 200px var(--radius) var(--radius); /* arched top */
+  background: linear-gradient(160deg, var(--color-navy) 0%, var(--color-navy-deep) 100%);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Keeps the photo placeholder label neatly inside the frame */
+.photo-frame .placeholder {
+  max-width: 85%;
+  text-align: center;
+}
+
+/* Your photo: fills the frame and is cropped neatly (never stretched) */
+.photo-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%; /* keeps the face near the top in view */
+}
+
+.photo-initial {
+  font-family: var(--font-heading);
+  font-size: 7rem;
+  line-height: 1;
+  color: var(--color-gold);
+}
+
+
+/* ---------- 6. Shared section styles ---------- */
+.section {
+  padding: var(--section-space) 0;
+}
+
+.section--tinted {
+  background-color: var(--color-bg-tint);
+}
+
+.section-header {
+  max-width: 40rem;
+  margin-bottom: 3rem;
+}
+
+.section-header--center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.section-number {
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold-dark);
+}
+
+.section-title {
+  font-size: clamp(2rem, 4.5vw, 2.9rem);
+  letter-spacing: -0.01em;
+}
+
+.section-intro {
+  margin-top: 1rem;
+  color: var(--color-muted);
+}
+
+
+/* ---------- 7. About ---------- */
+.about-grid {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.about-text p {
+  color: var(--color-muted);
+}
+
+.about-text .lead {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.6vw, 1.6rem);
+  line-height: 1.5;
+  color: var(--color-navy);
+  margin-bottom: 1.5rem;
+}
+
+.about-card {
+  align-self: start;
+  padding: 2rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+.about-card-title {
+  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.fact-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-line);
+  font-size: 0.95rem;
+  text-align: right;
+}
+
+.fact-list li:last-child {
+  border-bottom: none;
+}
+
+.fact-label {
+  color: var(--color-muted);
+  text-align: left;
+}
+
+
+/* ---------- 8. Experience timeline ---------- */
+.timeline {
+  position: relative;
+  max-width: 46rem;
+  padding-left: 2rem;
+}
+
+/* The vertical gold line */
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 0;
+  width: 1px;
+  background: linear-gradient(var(--color-gold), var(--color-line));
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 3rem;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+/* The dot on the line */
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  top: 0.45rem;
+  left: calc(-2rem - 6px);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: var(--color-bg-tint);
+  border: 2px solid var(--color-gold);
+}
+
+.timeline-date {
+  margin-bottom: 0.4rem;
+}
+
+.timeline-role {
+  font-size: 1.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.timeline-place {
+  color: var(--color-muted);
+  margin-bottom: 1rem;
+}
+
+.timeline-points li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-ink);
+}
+
+/* Small gold dash instead of a normal bullet */
+.timeline-points li::before {
+  content: "";
+  position: absolute;
+  top: 0.8em;
+  left: 0;
+  width: 0.55rem;
+  height: 1px;
+  background-color: var(--color-gold);
+}
+
+
+/* ---------- 9. Education cards ---------- */
+.card-grid {
+  display: grid;
+  gap: 1.25rem;
+  /* As many columns as fit, each at least 240px wide */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.card {
+  position: relative;
+  padding: 2rem 1.75rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-top: 3px solid var(--color-navy);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+}
+
+.card-badge {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.card-badge--progress {
+  background-color: rgba(201, 151, 75, 0.15);
+  color: var(--color-gold-dark);
+}
+
+.card-title {
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-subtitle {
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  margin-bottom: 0.75rem;
+}
+
+.card-meta {
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  margin-bottom: 0.4rem;
+}
+
+
+/* ---------- 10. Philosophy & competencies (dark section) ---------- */
+.section--dark {
+  background:
+    radial-gradient(50rem 25rem at 100% 0%, rgba(201, 151, 75, 0.14), transparent 60%),
+    var(--color-navy);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.section--dark .section-title,
+.section--dark h3 {
+  color: #fff;
+}
+
+.section--dark .section-number {
+  color: var(--color-gold);
+}
+
+.philosophy-quote {
+  position: relative;
+  max-width: 50rem;
+  margin: 0 0 3.5rem;
+  padding-left: 1.75rem;
+  border-left: 2px solid var(--color-gold);
+}
+
+.philosophy-quote p {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.8vw, 1.75rem);
+  line-height: 1.55;
+  color: #fff;
+}
+
+.competency-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+
+.competency {
+  padding: 2rem 1.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  background-color: rgba(255, 255, 255, 0.04);
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.35s var(--ease);
+}
+
+.competency:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(201, 151, 75, 0.5);
+  transform: translateY(-4px);
+}
+
+.competency-icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 1.25rem;
+  color: var(--color-gold);
+}
+
+.competency-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.6rem;
+}
+
+.competency p {
+  margin: 0;
+  font-size: 0.97rem;
+}
+
+
+/* ---------- 11. Contact ---------- */
+.contact-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 2.25rem 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-lift);
+}
+
+.contact-icon {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 0.5rem;
+  color: var(--color-gold-dark);
+}
+
+.contact-label {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+.contact-value {
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  word-break: break-word;
+}
+
+
+/* ---------- 12. Footer ---------- */
+.site-footer {
+  padding: 3rem 0;
+  background-color: var(--color-navy-deep);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.92rem;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.footer-name {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.75rem;
+}
+
+.footer-links a {
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: var(--color-gold);
+}
+
+.footer-copy {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+
+/* ---------- 13. Pop-up notice ---------- */
+.notice {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 300;
+  width: max-content;
+  max-width: calc(100% - 2rem);
+  padding: 0.95rem 1.4rem;
+  border-radius: var(--radius-small);
+  background-color: var(--color-navy);
+  color: #fff;
+  font-size: 0.95rem;
+  box-shadow: var(--shadow-lift);
+  border-left: 3px solid var(--color-gold);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 16px);
+  transition: opacity 0.3s ease, transform 0.3s var(--ease), visibility 0.3s;
+}
+
+.notice.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+
+/* ---------- 14. Fade-in animations ----------
+   Only applied when JavaScript is running (the "js" class),
+   so the content is never hidden if JavaScript fails. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+
+/* ---------- 15. Screen sizes ---------- */
+
+/* Wider phones and up (480px or more): qualifications in two neat columns */
+@media (min-width: 480px) {
+  .hero-credentials {
+    grid-template-columns: repeat(2, max-content);
+  }
+}
+
+/* Very small phones (under 380px): slightly smaller logo name so it fits */
+@media (max-width: 379px) {
+  .logo-text {
+    font-size: 1.1rem;
+  }
+}
+
+/* Tablet and up (768px wide or more) */
+@media (min-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
+
+  .about-grid {
+    grid-template-columns: 1.6fr 1fr;
+    gap: 4rem;
+  }
+
+  .timeline {
+    padding-left: 3rem;
+  }
+
+  .timeline-item::before {
+    left: calc(-3rem - 6px);
+  }
+}
+
+/* Desktop (960px wide or more): normal menu instead of the mobile one */
+@media (min-width: 960px) {
+  .nav-toggle {
+    display: none;
+  }
+
+  .primary-nav {
+    position: static;
+    height: auto;
+    padding: 0;
+    background: none;
+    border: none;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: none;
+  }
+
+  .nav-list {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    position: relative;
+    padding: 0.4rem 0;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-bottom: none;
+  }
+
+  /* Gold underline that grows on hover / when active */
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--color-gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease);
+  }
+
+  .nav-link:hover::after,
+  .nav-link.is-active::after {
+    transform: scaleX(1);
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Text column takes the remaining space; the portrait column
+     grows smoothly with the screen, between 280px and 380px wide */
+  .hero-inner {
+    grid-template-columns: minmax(0, 1fr) clamp(280px, 30vw, 380px);
+    gap: clamp(2.5rem, 4vw, 4.5rem);
+  }
+
+  .hero-photo {
+    justify-self: end;
+    width: calc(100% - 14px);
+    margin-right: 14px; /* room for the gold outline */
+  }
+}
+
+
+/* ---------- 16. Reduced motion ----------
+   Some people get dizzy from movement and turn on "reduce motion"
+   in their device settings. We respect that here. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .btn:hover,
+  .card:hover,
+  .competency:hover,
+  .contact-card:hover {
+    transform: none;
+  }
+}
