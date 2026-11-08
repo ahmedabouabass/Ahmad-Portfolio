@@ -302,22 +302,22 @@ function loadYT() {
   return yt.api;
 }
 function ytMsg(html) { $('#ytMsg').innerHTML = html; }
-async function playYT(id) {
+async function playYT(id, list) {
   ytMsg('Loading the player…');
   try { await loadYT(); } catch (e) { yt.api = null; ytMsg('The YouTube player could not load. Check your connection or any blocker, then try again.'); return; }
   $('#ytWrap').hidden = false; ytMsg('');
-  const open = '<a href="https://www.youtube.com/watch?v=' + id + '" target="_blank" rel="noopener">Open it on YouTube</a>';
+  const open = list ? '<a href="https://music.youtube.com/playlist?list=' + list + '" target="_blank" rel="noopener">Open it in YouTube Music</a>' : '<a href="https://www.youtube.com/watch?v=' + id + '" target="_blank" rel="noopener">Open it on YouTube</a>';
   if (!yt.player) {
     yt.player = new YT.Player('ytPlayer', {
-      width: '360', height: '203', videoId: id,
-      playerVars: { playsinline: 1, rel: 0, modestbranding: 1, origin: location.origin },
+      width: '360', height: '203', videoId: list ? undefined : id,
+      playerVars: Object.assign({ playsinline: 1, rel: 0, modestbranding: 1, origin: location.origin }, list ? { listType: 'playlist', list } : {}),
       events: {
         onReady: e => { e.target.setVolume(+$('#ytVol').value); e.target.playVideo(); },
-        onError: e => { ytPlaying = false; syncSoundUI(); ytMsg(([101, 150].includes(e.data) ? 'The owner of this video doesn\'t allow it to play here. ' : 'This video can\'t be played. ') + open + '.'); },
+        onError: e => { ytPlaying = false; syncSoundUI(); ytMsg(([101, 150].includes(e.data) ? 'The owner doesn\'t allow this to play here. ' : 'This ' + (list ? 'playlist' : 'video') + ' can\'t be played here. ') + open + '.'); },
         onStateChange: e => { ytPlaying = e.data === 1; syncSoundUI(); }
       }
     });
-  } else { yt.player.loadVideoById(id); yt.player.setVolume(+$('#ytVol').value); }
+  } else { if (list) yt.player.loadPlaylist({ listType: 'playlist', list }); else yt.player.loadVideoById(id); yt.player.setVolume(+$('#ytVol').value); }
 }
 $('#ytForm').addEventListener('submit', e => {
   e.preventDefault(); const id = ytId($('#ytInput').value);
@@ -596,6 +596,41 @@ $('#clearPlate').addEventListener('click', () => { bf.plate = {}; syncBreakfast(
 $('#saveBreakfast').addEventListener('click', () => { store.set('breakfastDay', today()); toast('Saved as today\'s breakfast, on this device.'); });
 buildFoods(); syncBreakfast();
 
+/* ============ Music shelf (YouTube Music playlists) ============ */
+const SHELF = [
+  { g: 'Arabic voices', items: [
+    { id: 'PLD0FDD0433302B55E', t: 'Fairuz', w: 'The classic Lebanese morning.' },
+    { id: 'PL593D6E149E9F19BB', t: 'Majida El Roumi', w: 'Warm, powerful Lebanese songs.' },
+    { id: 'PLDFF2BA60D5D101EC', t: 'Wael Kfouri', w: 'Lebanese pop with a gentle pace.' },
+    { id: 'PLCA01F1BD737763F4', t: 'Nancy Ajram', w: 'Bright Arabic pop for an easy start.' },
+    { id: 'PL06766E323078842A', t: 'Elissa', w: 'Arabic pop and ballads.' }
+  ] },
+  { g: 'Calm and classical', items: [
+    { id: 'PL12F15AC67A9554B7', t: 'Piano', w: 'Solo piano for focus and calm.' },
+    { id: 'PLADE8DCCC561F51A0', t: 'Classical', w: 'Classical pieces for a slow start.' },
+    { id: 'PL10EA23B126FEA2EF', t: 'Opera', w: 'Big voices for a bigger morning.' }
+  ] },
+  { g: 'More energy', items: [
+    { id: 'PL0B60066BDB924631', t: 'Rap', w: 'When the morning needs a push.' },
+    { id: 'PL9C1D4DF7B2DE1AD1', t: 'Techno', w: 'Steady beats for getting things done.' }
+  ] }
+];
+SHELF.forEach(grp => {
+  const sec = document.createElement('div'); sec.className = 'shelf-group';
+  const h2 = document.createElement('h2'); h2.textContent = grp.g; sec.appendChild(h2);
+  const ul = document.createElement('ul'); ul.className = 'books';
+  grp.items.forEach(p => {
+    const li = document.createElement('li'); li.className = 'book';
+    li.innerHTML = '<span><span class="book-title"></span><p class="book-why"></p></span><span class="book-actions"><button class="btn btn-ghost sm" type="button">Play here</button><a target="_blank" rel="noopener noreferrer">Open in YouTube Music</a></span>';
+    $('.book-title', li).textContent = p.t; $('.book-why', li).textContent = p.w;
+    const btn = $('button', li); btn.setAttribute('aria-label', 'Play the ' + p.t + ' playlist here');
+    btn.addEventListener('click', () => { openSheet(true, 'sound'); playYT(null, p.id); });
+    const a = $('a', li); a.href = 'https://music.youtube.com/playlist?list=' + p.id; a.setAttribute('aria-label', 'Open the ' + p.t + ' playlist in YouTube Music, opens in a new tab');
+    ul.appendChild(li);
+  });
+  sec.appendChild(ul); $('#shelf').appendChild(sec);
+});
+
 /* ============ Reading ============ */
 const BOOKS = [
   { t: 'Wherever You Go, There You Are', a: 'Jon Kabat-Zinn', w: 'The classic starting point for everyday mindfulness.' },
@@ -626,7 +661,7 @@ function refreshHub() {
   const next = !cDone ? ['Start with coffee', '#coffee'] : !bDone ? ['Continue to breathing', '#breathe'] : !fDone ? ['Build your breakfast', '#breakfast'] : ['Sit again', '#breathe'];
   cta.textContent = next[0]; cta.href = next[1];
 }
-const VIEWS = ['hub', 'coffee', 'breathe', 'breakfast', 'reading'];
+const VIEWS = ['hub', 'coffee', 'breathe', 'breakfast', 'music', 'reading'];
 function route() {
   let h = location.hash.slice(1); if (!VIEWS.includes(h)) h = 'hub';
   if ((S.state === 'running' || S.state === 'paused') && h !== 'breathe') { toast('Finish or end your session first.'); location.hash = '#breathe'; return; }

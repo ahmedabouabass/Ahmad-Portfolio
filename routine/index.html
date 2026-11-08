@@ -46,7 +46,7 @@
     <section id="view-hub" class="view hub" data-view="hub" aria-labelledby="hub-title">
       <div class="hub-copy">
         <h1 id="hub-title" tabindex="-1">Slow mornings, done well.</h1>
-        <p class="lede">Order a coffee, let the room settle, then breathe for a few minutes. Then build a breakfast and pick something to read.</p>
+        <p class="lede">Order a coffee, let the room settle, then breathe for a few minutes. Then build a breakfast, put on some music and pick something to read.</p>
 
         <button id="hubAtmo" class="atmo-line" type="button"><span id="nowLine">Checking the weather…</span><span class="edit">Change the scene</span></button>
 
@@ -57,6 +57,8 @@
             <span class="menu-name">Sit and breathe</span><span class="leader" aria-hidden="true"></span><span class="menu-tag" data-tag="breathe">Start</span></a></li>
           <li><a class="menu-line" href="#breakfast" data-step="breakfast">
             <span class="menu-name">Build your breakfast</span><span class="leader" aria-hidden="true"></span><span class="menu-tag" data-tag="breakfast">Start</span></a></li>
+          <li><a class="menu-line" href="#music" data-step="music">
+            <span class="menu-name">Choose your music</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Open</span></a></li>
           <li><a class="menu-line" href="#reading" data-step="reading">
             <span class="menu-name">Pick something to read</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Open</span></a></li>
           <li><div class="menu-line is-soon">
@@ -212,6 +214,14 @@
           <p class="hint">A planning aid, not medical or dietary advice.</p>
         </aside>
       </div>
+    </section>
+
+    <!-- MUSIC -->
+    <section id="view-music" class="view music" data-view="music" aria-labelledby="music-title" hidden>
+      <a class="back" href="#hub">Back to the ritual</a>
+      <h1 id="music-title" tabindex="-1">Choose your music</h1>
+      <p class="lede">Playlists I keep on YouTube Music. Play one here while you have your coffee, or open it in YouTube Music.</p>
+      <div id="shelf"></div>
     </section>
 
     <!-- READING -->
