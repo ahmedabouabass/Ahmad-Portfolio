@@ -19,7 +19,7 @@ const D = {
   /* hub */
   'Slow mornings, done well.': 'صباحات هادئة، على أكمل وجه.',
   'Coffee, a few minutes of breathing, then breakfast. About fifteen minutes, one step at a time.': 'قهوة، ثم دقائق من التنفّس، ثم الفطور. نحو خمس عشرة دقيقة، خطوة بعد خطوة.',
-  'Start my morning': 'ابدأ صباحي', 'Order your coffee': 'اطلب قهوتك', 'Continue to breathing': 'تابع إلى التنفّس', 'Continue to breakfast': 'تابع إلى الفطور', 'Sit again': 'اجلس مجددًا',
+  'Start my morning': 'ابدأ صباحي', 'Order your coffee': 'اطلب قهوتك', 'Meet your future self': 'تعرّف على نسختك المستقبلية', 'Continue to breathing': 'تابع إلى التنفّس', 'Continue to breakfast': 'تابع إلى الفطور', 'Sit again': 'اجلس مجددًا',
   'Checking the weather…': 'نتحقق من الطقس…', 'Change the scene': 'غيّر المشهد', 'Or go straight to one thing': 'أو انتقل مباشرةً إلى خطوة واحدة',
   'Sit and breathe': 'اجلس وتنفّس', 'Build your breakfast': 'جهّز فطورك', 'Choose your music': 'اختر موسيقاك', 'Pick something to read': 'اختر ما تقرؤه',
   'Your calendar': 'تقويمك', 'Dress your avatar': 'ألبِس شخصيتك',

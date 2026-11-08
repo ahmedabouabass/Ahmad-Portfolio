@@ -418,3 +418,33 @@ body.ar .btn-start{font-size:1.15rem}
 .cw-tool .cw-links{margin:0}
 .cw-order{font:500 1.15rem/1.4 var(--serif);background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:.9rem 1.1rem;margin:.9rem 0 0}
 .cw-ways [hidden]{display:none}
+
+/* ---- future self ---- */
+.fy-line{display:flex;align-items:center;gap:.8rem;margin:.9rem 0 0;max-width:34rem}
+.fy-line[hidden]{display:none}
+.fy-mini{flex:none;width:2.6rem;line-height:0}
+.fy-mini svg{width:100%;height:auto}
+.fy-hubtext{color:var(--gold-2);font-size:.98rem}
+.future .lede{max-width:36rem}
+.fy-prog{color:var(--muted);font-size:.9rem;margin:1.6rem 0 .5rem}
+.fy-q{font:500 1.55rem/1.25 var(--serif);margin:0 0 .8rem;outline:0}
+.fy-help{color:var(--muted);font-size:.97rem;max-width:34rem;margin:.2rem 0 1rem}
+.fy-body{max-width:36rem}
+.fy-field{display:grid;gap:.4rem;margin:1.2rem 0 0;color:var(--muted);font-size:.92rem}
+.fy-field input,.fy-field textarea{font:400 1rem/1.5 var(--sans);color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;width:100%;box-sizing:border-box;resize:vertical}
+.fy-field input:focus,.fy-field textarea:focus{outline:2px solid var(--gold);outline-offset:1px}
+.fy-timer{display:flex;align-items:center;gap:1rem;margin:.4rem 0 .6rem}
+.fy-clock{color:var(--gold-2);font-variant-numeric:tabular-nums}
+.fy-cue{min-height:1.6em;color:var(--gold-2);margin:.2rem 0 0}
+.fy-plan{font:500 1.2rem/1.5 var(--serif);color:var(--gold-2);margin:1.2rem 0 0;min-height:1.5em}
+.fy-look,.fy-card{display:grid;grid-template-columns:auto 1fr;gap:1.6rem;align-items:start;margin:1rem 0}
+.fy-avatar{line-height:0;background:var(--soft);border:1px solid var(--line);border-radius:18px;padding:.6rem}
+.fy-avatar svg{display:block;max-width:100%;height:auto}
+.fy-opts .chips{margin-bottom:.4rem}
+.fy-ol{font:600 .85rem/1.2 var(--sans);color:var(--muted);margin:1rem 0 .5rem}
+.fy-opts .fy-ol:first-child,.fy-sum .fy-ol:first-child{margin-top:0}
+.fy-v{margin:0;line-height:1.6}
+.fy-sws{display:flex;gap:.5rem;flex-wrap:wrap}
+.fy-sw{width:2rem;height:2rem;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+.fy-sw[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--gold)}
+@media (max-width:560px){.fy-look,.fy-card{grid-template-columns:1fr;justify-items:start}}

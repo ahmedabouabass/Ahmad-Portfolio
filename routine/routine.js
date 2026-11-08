@@ -665,7 +665,7 @@ function refreshHub() {
   const next = !cDone ? [started ? 'Order your coffee' : 'Start my morning', '#coffee'] : !bDone ? ['Continue to breathing', '#breathe'] : !fDone ? ['Continue to breakfast', '#breakfast'] : ['Sit again', '#breathe'];
   cta.textContent = next[0]; cta.href = next[1];
 }
-const VIEWS = ['hub', 'coffee', 'breathe', 'breakfast', 'music', 'reading', 'calendar'];
+const VIEWS = ['hub', 'coffee', 'breathe', 'breakfast', 'music', 'reading', 'calendar', 'future'];
 function route() {
   let h = location.hash.slice(1); if (!VIEWS.includes(h)) h = 'hub';
   if ((S.state === 'running' || S.state === 'paused') && h !== 'breathe') { toast('Finish or end your session first.'); location.hash = '#breathe'; return; }

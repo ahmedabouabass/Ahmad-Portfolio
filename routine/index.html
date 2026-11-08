@@ -15,6 +15,7 @@
   <script src="atmosphere.js" defer></script>
   <script src="routine.js" defer></script>
   <script src="coffee.js" defer></script>
+  <script src="future.js" defer></script>
   <script src="calendar.js" defer></script>
   <script src="i18n.js" defer></script>
 </head>
@@ -52,6 +53,7 @@
         <h1 id="hub-title" tabindex="-1">Slow mornings, done well.</h1>
         <p class="lede">Coffee, a few minutes of breathing, then breakfast. About fifteen minutes, one step at a time.</p>
         <p class="today-line" id="todayLine" data-no-i18n hidden></p>
+        <p class="fy-line" id="futureLine" data-no-i18n hidden></p>
         <a class="btn btn-primary btn-start" id="hubCta" href="#coffee">Start my morning</a>
         <p class="stats" id="stats" hidden></p>
 
@@ -71,8 +73,8 @@
             <span class="menu-name">Pick something to read</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Open</span></a></li>
           <li><a class="menu-line" href="#calendar" data-step="calendar">
             <span class="menu-name">Your calendar</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Open</span></a></li>
-          <li><div class="menu-line is-soon">
-            <span class="menu-name">Dress your avatar</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Coming soon</span></div></li>
+          <li><a class="menu-line" href="#future" data-step="future">
+            <span class="menu-name">Meet your future self</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Open</span></a></li>
         </ol>
 
       </div>
@@ -248,6 +250,11 @@
       <h1 id="calendar-title" tabindex="-1">Your calendar</h1>
       <p class="lede">Public holidays, weekends and the Hijri date for the country you are in.</p>
       <div id="calDyn" data-no-i18n></div>
+    </section>
+
+    <!-- FUTURE SELF -->
+    <section id="view-future" class="view future" data-view="future" aria-labelledby="future-title" hidden>
+      <div id="futureDyn" data-no-i18n></div>
     </section>
   </main>
 
