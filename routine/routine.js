@@ -306,17 +306,20 @@ async function playYT(id, list) {
   ytMsg('Loading the player…');
   try { await loadYT(); } catch (e) { yt.api = null; ytMsg('The YouTube player could not load. Check your connection or any blocker, then try again.'); return; }
   $('#ytWrap').hidden = false; ytMsg('');
-  const open = list ? '<a href="https://music.youtube.com/playlist?list=' + list + '" target="_blank" rel="noopener">Open it in YouTube Music</a>' : '<a href="https://www.youtube.com/watch?v=' + id + '" target="_blank" rel="noopener">Open it on YouTube</a>';
+  yt.cur = { id, list };
+  const openLink = c => c.list ? '<a href="https://music.youtube.com/playlist?list=' + c.list + '" target="_blank" rel="noopener">Open it in YouTube Music</a>' : '<a href="https://www.youtube.com/watch?v=' + c.id + '" target="_blank" rel="noopener">Open it on YouTube</a>';
   if (!yt.player) {
-    yt.player = new YT.Player('ytPlayer', {
-      width: '360', height: '203', videoId: list ? undefined : id,
+    const opts = {
+      width: '360', height: '203',
       playerVars: Object.assign({ playsinline: 1, rel: 0, modestbranding: 1, origin: location.origin }, list ? { listType: 'playlist', list } : {}),
       events: {
         onReady: e => { e.target.setVolume(+$('#ytVol').value); e.target.playVideo(); },
-        onError: e => { ytPlaying = false; syncSoundUI(); ytMsg(([101, 150].includes(e.data) ? 'The owner doesn\'t allow this to play here. ' : 'This ' + (list ? 'playlist' : 'video') + ' can\'t be played here. ') + open + '.'); },
+        onError: e => { ytPlaying = false; syncSoundUI(); ytMsg(([101, 150].includes(e.data) ? 'The owner doesn\'t allow this to play here. ' : 'This ' + (yt.cur.list ? 'playlist' : 'video') + ' can\'t be played here. ') + openLink(yt.cur) + '.'); },
         onStateChange: e => { ytPlaying = e.data === 1; syncSoundUI(); }
       }
-    });
+    };
+    if (!list) opts.videoId = id;
+    yt.player = new YT.Player('ytPlayer', opts);
   } else { if (list) yt.player.loadPlaylist({ listType: 'playlist', list }); else yt.player.loadVideoById(id); yt.player.setVolume(+$('#ytVol').value); }
 }
 $('#ytForm').addEventListener('submit', e => {
@@ -606,13 +609,13 @@ const SHELF = [
     { id: 'PL06766E323078842A', t: 'Elissa', w: 'Arabic pop and ballads.' }
   ] },
   { g: 'Calm and classical', items: [
-    { id: 'PL12F15AC67A9554B7', t: 'Piano', w: 'Solo piano for focus and calm.' },
+    { e: 1, id: 'PL12F15AC67A9554B7', t: 'Piano', w: 'Solo piano for focus and calm.' },
     { id: 'PLADE8DCCC561F51A0', t: 'Classical', w: 'Classical pieces for a slow start.' },
-    { id: 'PL10EA23B126FEA2EF', t: 'Opera', w: 'Big voices for a bigger morning.' }
+    { e: 1, id: 'PL10EA23B126FEA2EF', t: 'Opera', w: 'Big voices for a bigger morning.' }
   ] },
   { g: 'More energy', items: [
-    { id: 'PL0B60066BDB924631', t: 'Rap', w: 'When the morning needs a push.' },
-    { id: 'PL9C1D4DF7B2DE1AD1', t: 'Techno', w: 'Steady beats for getting things done.' }
+    { e: 1, id: 'PL0B60066BDB924631', t: 'Rap', w: 'When the morning needs a push.' },
+    { e: 1, id: 'PL9C1D4DF7B2DE1AD1', t: 'Techno', w: 'Steady beats for getting things done.' }
   ] }
 ];
 SHELF.forEach(grp => {
@@ -621,10 +624,9 @@ SHELF.forEach(grp => {
   const ul = document.createElement('ul'); ul.className = 'books';
   grp.items.forEach(p => {
     const li = document.createElement('li'); li.className = 'book';
-    li.innerHTML = '<span><span class="book-title"></span><p class="book-why"></p></span><span class="book-actions"><button class="btn btn-ghost sm" type="button">Play here</button><a target="_blank" rel="noopener noreferrer">Open in YouTube Music</a></span>';
+    li.innerHTML = '<span><span class="book-title"></span><p class="book-why"></p></span><span class="book-actions">' + (p.e ? '<button class="btn btn-ghost sm" type="button">Play here</button>' : '') + '<a target="_blank" rel="noopener noreferrer">Open in YouTube Music</a></span>';
     $('.book-title', li).textContent = p.t; $('.book-why', li).textContent = p.w;
-    const btn = $('button', li); btn.setAttribute('aria-label', 'Play the ' + p.t + ' playlist here');
-    btn.addEventListener('click', () => { openSheet(true, 'sound'); playYT(null, p.id); });
+    const btn = $('button', li); if (btn) { btn.setAttribute('aria-label', 'Play the ' + p.t + ' playlist here'); btn.addEventListener('click', () => { openSheet(true, 'sound'); playYT(null, p.id); }); }
     const a = $('a', li); a.href = 'https://music.youtube.com/playlist?list=' + p.id; a.setAttribute('aria-label', 'Open the ' + p.t + ' playlist in YouTube Music, opens in a new tab');
     ul.appendChild(li);
   });
