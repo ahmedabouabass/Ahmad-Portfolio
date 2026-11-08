@@ -231,7 +231,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .land svg{display:block}
 .scrim{position:absolute;inset:0;
   background:linear-gradient(90deg,rgba(8,13,24,.74),rgba(8,13,24,.48) 48%,rgba(8,13,24,.2)),linear-gradient(180deg,rgba(8,13,24,.38),rgba(8,13,24,0) 26%,rgba(8,13,24,0) 68%,rgba(8,13,24,.5))}
-body[data-view="breathe"] .scrim,body[data-view="coffee"] .scrim{background:linear-gradient(180deg,rgba(8,13,24,.55),rgba(8,13,24,.42) 60%,rgba(8,13,24,.6))}
+body[data-view="breathe"] .scrim,body[data-view="coffee"] .scrim,body[data-view="breakfast"] .scrim,body[data-view="reading"] .scrim{background:linear-gradient(180deg,rgba(8,13,24,.55),rgba(8,13,24,.42) 60%,rgba(8,13,24,.6))}
 @media (max-width:820px){.scrim{background:rgba(8,13,24,.6)}}
 .fx{position:absolute;inset:0;width:100%;height:100%}
 .flash{position:absolute;inset:0;background:#dfe9ff;opacity:0}
@@ -286,3 +286,34 @@ body[data-view="breathe"] .scrim,body[data-view="coffee"] .scrim{background:line
   .eq rect{transform:scaleY(.6)}
   .scene,.land,.lands,.clouds,.sky-orb{transition-duration:.01ms !important}
 }
+
+/* breakfast */
+.bf-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:clamp(1.5rem,4vw,3rem);align-items:start;margin-top:.5rem}
+.bf-total{position:sticky;top:1rem;border:1px solid var(--line);background:rgba(14,21,34,.78);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:20px;padding:1.5rem}
+.bf-total h2{font-size:1.3rem;color:var(--muted)}
+.bf-protein{font:500 2.5rem/1 var(--serif);margin:.7rem 0 1rem}
+.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#C9974B,#E6BC73);transition:width .4s var(--ease)}
+.macros{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:1.2rem 0 1rem}
+.macros dt{color:var(--muted);font-size:.88rem}
+.macros dd{margin:0;font:500 1.3rem/1.3 var(--serif);font-variant-numeric:tabular-nums}
+.plate-list{list-style:none;margin:0 0 .4rem;padding:0;color:var(--muted);font-size:.95rem}
+.plate-list li{padding:.15rem 0}
+.foods-group h3{font:600 .95rem/1.2 var(--sans);color:var(--muted);margin:1.8rem 0 .5rem}
+.foods-group ul{list-style:none;margin:0;padding:0}
+.food{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.75rem 0;border-bottom:2px dotted rgba(245,240,230,.16)}
+.food-name{font:500 1.08rem/1.3 var(--serif);display:block}
+.food-meta{color:var(--muted);font-size:.9rem}
+.step{display:inline-flex;align-items:center;gap:.45rem;flex:none}
+.step button{width:2.4rem;height:2.4rem;border-radius:50%;border:1px solid var(--line);background:var(--soft);color:var(--ink);font:500 1.15rem/1 var(--sans);cursor:pointer}
+.step button:hover{border-color:var(--gold)}
+.step button[disabled]{opacity:.35;cursor:not-allowed}
+.step output{min-width:1.6rem;text-align:center;font-variant-numeric:tabular-nums}
+/* reading */
+.books{list-style:none;margin:2rem 0 1rem;padding:0;max-width:46rem}
+.book{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;padding:1.1rem 0;border-bottom:2px dotted rgba(245,240,230,.2)}
+.book-title{font:500 1.3rem/1.25 var(--serif);display:block}
+.book-by{color:var(--gold-2);font-size:.95rem;display:block;margin:.15rem 0 .35rem}
+.book-why{color:var(--muted);margin:0;font-size:.98rem;max-width:30rem}
+.book a{flex:none;color:var(--gold-2);text-underline-offset:.25em}
+@media (max-width:820px){.bf-grid{grid-template-columns:1fr}.bf-total{position:static;order:-1}.book{flex-direction:column;align-items:flex-start;gap:.6rem}}

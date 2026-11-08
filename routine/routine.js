@@ -348,6 +348,8 @@ const DRINKS = [
   { id: 'cappuccino', name: 'Cappuccino', note: 'Deep foam for slow sips', liquid: '#946440', foam: '#f3e8d5', art: 'ring', preset: 'fireside', steps: ['Grinding the beans', 'Frothing the milk', 'Spooning the foam'] },
   { id: 'qahwa', name: 'Arabic qahwa', note: 'Golden and scented with cardamom', liquid: '#c9a24f', foam: '#d8b866', art: 'none', preset: 'fireside', steps: ['Warming the dallah', 'Adding cardamom', 'Pouring a small cup'] },
   { id: 'turkish', name: 'Turkish coffee', note: 'Thick, unfiltered, with foam', liquid: '#2a190f', foam: '#7b5232', art: 'none', preset: 'dawn', steps: ['Grinding extra fine', 'Bringing it to the boil', 'Pouring slowly'] },
+  { id: 'matcha', name: 'Matcha', note: 'Whisked green tea, calm and bright', liquid: '#7f9f4f', foam: '#c6d98a', art: 'none', steps: ['Sifting the matcha', 'Whisking until frothy', 'Pouring into the cup'] },
+  { id: 'mate', name: 'Yerba mate', note: 'Earthy and smooth, sipped slowly', liquid: '#6d7b38', foam: '#a8b468', art: 'none', steps: ['Filling the gourd', 'Adding hot water', 'Setting the bombilla'] },
   { id: 'mint', name: 'Mint tea', note: 'Fresh mint, light and clear', liquid: '#b8a64a', foam: '#d6cb77', art: 'none', preset: 'rainy', steps: ['Warming the pot', 'Pressing the mint', 'Pouring from a height'] }
 ];
 $('#hubCup').innerHTML = cupSVG('h'); $('#brewCup').innerHTML = cupSVG('b');
@@ -399,6 +401,10 @@ $('#orderBtn').addEventListener('click', order);
 /* ============ Mindfulness session ============ */
 const PATTERNS = { off: null, calm: [4, 0, 6, 0], box: [4, 4, 4, 4], relax: [4, 7, 8, 0] };
 const PHASE = ['Breathe in', 'Hold', 'Breathe out', 'Rest'];
+const CUES = {
+  open: ['Rest in open awareness.', 'Let sounds come and go.', 'Notice what is here, without fixing it.', 'Let thoughts pass like clouds.', 'Feel the body sitting.'],
+  noting: ['Notice what is here. Name it softly.', 'Hearing.', 'Thinking.', 'Feeling.', 'Seeing. Then let it go.']
+};
 const ease = x => 0.5 - 0.5 * Math.cos(Math.PI * x);
 function breathAt(sec, p) {
   const L = p.reduce((a, b) => a + b, 0); let t = sec % L, i = 0;
@@ -468,7 +474,7 @@ function render() {
     const b = breathAt(elapsed() / 1000, S.pattern);
     $('#orb').style.transform = reduce ? 'scale(.8)' : 'scale(' + b.scale.toFixed(3) + ')';
     $('#cue').textContent = PHASE[b.i] + ' ' + b.left;
-  } else if (!S.pattern) { $('#cue').textContent = ''; }
+  } else if (!S.pattern) { const c = CUES[prefs.guide]; $('#cue').textContent = c && S.state === 'running' ? c[Math.floor(elapsed() / 30000) % c.length] : ''; }
 }
 function pauseResume() {
   if (S.state === 'running') {
@@ -513,17 +519,114 @@ function stats() {
   return { n: log.length, mins: log.reduce((a, b) => a + b.m, 0), streak };
 }
 
+/* ============ Breakfast ============ */
+const FOODS = [
+  { g: 'Protein', items: [
+    { id: 'eggs', n: 'Eggs', s: '2 large', k: 143, p: 13, c: 1, f: 10 },
+    { id: 'yogurt', n: 'Plain Greek yogurt', s: '170 g', k: 100, p: 17, c: 6, f: 1 },
+    { id: 'powder', n: 'Plant protein powder', s: '1 scoop, 30 g', k: 120, p: 20, c: 4, f: 2 },
+    { id: 'foul', n: 'Foul medames', s: '½ cup', k: 100, p: 7, c: 17, f: 1 },
+    { id: 'labneh', n: 'Labneh', s: '2 tbsp', k: 60, p: 3, c: 2, f: 5 }
+  ] },
+  { g: 'Carbs', items: [
+    { id: 'oats', n: 'Rolled oats', s: '40 g dry', k: 150, p: 5, c: 27, f: 3 },
+    { id: 'toast', n: 'Whole-wheat toast', s: '1 slice', k: 80, p: 4, c: 14, f: 1 },
+    { id: 'banana', n: 'Banana', s: '1 medium', k: 105, p: 1, c: 27, f: 0 },
+    { id: 'berries', n: 'Berries', s: '½ cup', k: 40, p: 1, c: 10, f: 0 },
+    { id: 'dates', n: 'Medjool dates', s: '2 dates', k: 133, p: 1, c: 36, f: 0 }
+  ] },
+  { g: 'Extras and drinks', items: [
+    { id: 'pb', n: 'Peanut butter', s: '1 tbsp', k: 95, p: 4, c: 3, f: 8 },
+    { id: 'almonds', n: 'Almonds', s: '28 g', k: 165, p: 6, c: 6, f: 14 },
+    { id: 'chia', n: 'Chia seeds', s: '1 tbsp', k: 58, p: 2, c: 5, f: 4 },
+    { id: 'flax', n: 'Ground flaxseed', s: '1 tbsp', k: 37, p: 1, c: 2, f: 3 },
+    { id: 'soy', n: 'Unsweetened soy milk', s: '1 cup', k: 80, p: 7, c: 4, f: 4 },
+    { id: 'milk', n: 'Whole milk', s: '1 cup', k: 150, p: 8, c: 12, f: 8 }
+  ] }
+];
+const FOOD = {}; FOODS.forEach(g => g.items.forEach(i => { FOOD[i.id] = i; }));
+const PLATES = [
+  { n: 'Power oats', v: { oats: 1, powder: 1, soy: 1, banana: 1, chia: 1 } },
+  { n: 'Egg and foul plate', v: { eggs: 1, foul: 1, toast: 2, labneh: 1 } },
+  { n: 'Yogurt bowl', v: { yogurt: 1, berries: 1, almonds: 1, chia: 1, flax: 1 } }
+];
+const MAXQ = 6;
+const bf = Object.assign({ goal: 30, plate: {} }, store.get('plate', {}));
+Object.keys(bf.plate).forEach(k => { if (!FOOD[k]) delete bf.plate[k]; });
+function buildFoods() {
+  const box = $('#foods'); box.innerHTML = '';
+  FOODS.forEach(grp => {
+    const sec = document.createElement('div'); sec.className = 'foods-group';
+    sec.innerHTML = '<h3>' + grp.g + '</h3>';
+    const ul = document.createElement('ul');
+    grp.items.forEach(i => {
+      const li = document.createElement('li'); li.className = 'food';
+      li.innerHTML = '<span><span class="food-name">' + i.n + '</span><span class="food-meta">' + i.s + ': ' + i.k + ' kcal, ' + i.p + ' g protein</span></span>' +
+        '<span class="step" role="group" aria-label="' + i.n + ' servings"><button type="button" data-f="' + i.id + '" data-d="-1" aria-label="Fewer ' + i.n.toLowerCase() + '">−</button><output id="q-' + i.id + '" aria-live="polite">0</output><button type="button" data-f="' + i.id + '" data-d="1" aria-label="More ' + i.n.toLowerCase() + '">+</button></span>';
+      ul.appendChild(li);
+    });
+    sec.appendChild(ul); box.appendChild(sec);
+  });
+  const pl = $('#plates'); pl.innerHTML = '';
+  PLATES.forEach((p, idx) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = p.n; b.addEventListener('click', () => { bf.plate = Object.assign({}, p.v); syncBreakfast(); }); pl.appendChild(b); });
+}
+function syncBreakfast() {
+  let k = 0, p = 0, c = 0, f = 0; const lines = [];
+  Object.keys(FOOD).forEach(id => {
+    const q = bf.plate[id] || 0, i = FOOD[id]; $('#q-' + id).textContent = q;
+    $$('button[data-f="' + id + '"]').forEach(b => { b.disabled = (+b.dataset.d < 0 && q <= 0) || (+b.dataset.d > 0 && q >= MAXQ); });
+    if (q > 0) { k += i.k * q; p += i.p * q; c += i.c * q; f += i.f * q; lines.push(q + ' × ' + i.n.toLowerCase()); }
+  });
+  $('#tProtein').textContent = Math.round(p); $('#tKcal').textContent = Math.round(k); $('#tCarb').textContent = Math.round(c) + ' g'; $('#tFat').textContent = Math.round(f) + ' g';
+  const pct = Math.min(100, Math.round(p / bf.goal * 100));
+  $('#goalFill').style.width = pct + '%'; $('#goalBar').setAttribute('aria-valuenow', String(pct));
+  $('#goalText').textContent = !lines.length ? 'Add something to your plate to begin.' : (p >= bf.goal ? 'Goal reached: ' + Math.round(p) + ' g of ' + bf.goal + ' g.' : Math.ceil(bf.goal - p) + ' g of protein to go.');
+  const pl = $('#plateList'); pl.innerHTML = ''; lines.forEach(t => { const li = document.createElement('li'); li.textContent = t; pl.appendChild(li); });
+  $$('#goalChips .chip').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.v === bf.goal)));
+  $$('#plates .chip').forEach((b, idx) => { const v = PLATES[idx].v, same = Object.keys(v).length === lines.length && Object.keys(v).every(id => bf.plate[id] === v[id]); b.setAttribute('aria-pressed', String(same)); });
+  $('#saveBreakfast').disabled = !lines.length;
+  store.set('plate', { goal: bf.goal, plate: bf.plate });
+}
+$('#foods').addEventListener('click', e => {
+  const b = e.target.closest('button[data-f]'); if (!b || b.disabled) return;
+  const id = b.dataset.f, q = clamp((bf.plate[id] || 0) + +b.dataset.d, 0, MAXQ); if (q) bf.plate[id] = q; else delete bf.plate[id]; syncBreakfast();
+});
+$('#goalChips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; bf.goal = +b.dataset.v; syncBreakfast(); });
+$('#clearPlate').addEventListener('click', () => { bf.plate = {}; syncBreakfast(); });
+$('#saveBreakfast').addEventListener('click', () => { store.set('breakfastDay', today()); toast('Saved as today\'s breakfast, on this device.'); });
+buildFoods(); syncBreakfast();
+
+/* ============ Reading ============ */
+const BOOKS = [
+  { t: 'Wherever You Go, There You Are', a: 'Jon Kabat-Zinn', w: 'The classic starting point for everyday mindfulness.' },
+  { t: 'Radical Acceptance', a: 'Tara Brach', w: 'Self-compassion, with meditation woven through it.' },
+  { t: 'Four Thousand Weeks', a: 'Oliver Burkeman', w: 'A calmer way to think about time and its limits.' },
+  { t: 'Man\'s Search for Meaning', a: 'Viktor Frankl', w: 'A short, hard-won book on finding meaning in difficulty.' },
+  { t: 'The Wisdom of Insecurity', a: 'Alan Watts', w: 'Why chasing certainty keeps us restless, and what to do instead.' },
+  { t: 'Mindful Eating', a: 'Jan Chozen Bays', w: 'Slow down at the table. A good companion to breakfast.' }
+];
+BOOKS.forEach(b => {
+  const li = document.createElement('li'); li.className = 'book';
+  const url = 'https://www.audible.com/search?keywords=' + encodeURIComponent(b.t + ' ' + b.a);
+  li.innerHTML = '<span><span class="book-title"></span><span class="book-by"></span><p class="book-why"></p></span><a target="_blank" rel="noopener noreferrer"></a>';
+  $('.book-title', li).textContent = b.t; $('.book-by', li).textContent = b.a; $('.book-why', li).textContent = b.w;
+  const a = $('a', li); a.href = url; a.textContent = 'Find on Audible'; a.setAttribute('aria-label', 'Find ' + b.t + ' on Audible, opens in a new tab');
+  $('#books').appendChild(li);
+});
+
 /* ============ Hub and routing ============ */
 function refreshHub() {
   const t = today();
   $('[data-tag="coffee"]').textContent = store.get('coffeeDay', '') === t ? 'Done today' : 'Start';
   $('[data-tag="breathe"]').textContent = store.get('breatheDay', '') === t ? 'Done today' : 'Start';
+  $('[data-tag="breakfast"]').textContent = store.get('breakfastDay', '') === t ? 'Done today' : 'Start';
   const s = stats(), el = $('#stats');
   if (s) { el.hidden = false; el.textContent = s.n + (s.n === 1 ? ' session' : ' sessions') + ', ' + s.mins + ' minutes' + (s.streak > 1 ? ', ' + s.streak + ' days in a row.' : '.'); } else el.hidden = true;
-  const cta = $('#hubCta'); const coffeeDone = store.get('coffeeDay', '') === t;
-  cta.textContent = coffeeDone ? 'Continue to breathing' : 'Start with coffee'; cta.href = coffeeDone ? '#breathe' : '#coffee';
+  const cta = $('#hubCta'), cDone = store.get('coffeeDay', '') === t, bDone = store.get('breatheDay', '') === t, fDone = store.get('breakfastDay', '') === t;
+  const next = !cDone ? ['Start with coffee', '#coffee'] : !bDone ? ['Continue to breathing', '#breathe'] : !fDone ? ['Build your breakfast', '#breakfast'] : ['Sit again', '#breathe'];
+  cta.textContent = next[0]; cta.href = next[1];
 }
-const VIEWS = ['hub', 'coffee', 'breathe'];
+const VIEWS = ['hub', 'coffee', 'breathe', 'breakfast', 'reading'];
 function route() {
   let h = location.hash.slice(1); if (!VIEWS.includes(h)) h = 'hub';
   if ((S.state === 'running' || S.state === 'paused') && h !== 'breathe') { toast('Finish or end your session first.'); location.hash = '#breathe'; return; }

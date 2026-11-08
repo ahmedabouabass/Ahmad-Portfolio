@@ -46,7 +46,7 @@
     <section id="view-hub" class="view hub" data-view="hub" aria-labelledby="hub-title">
       <div class="hub-copy">
         <h1 id="hub-title" tabindex="-1">Slow mornings, done well.</h1>
-        <p class="lede">Order a coffee, let the room settle, then breathe for a few minutes. Breakfast and a bit of style come next.</p>
+        <p class="lede">Order a coffee, let the room settle, then breathe for a few minutes. Then build a breakfast and pick something to read.</p>
 
         <button id="hubAtmo" class="atmo-line" type="button"><span id="nowLine">Checking the weather…</span><span class="edit">Change the scene</span></button>
 
@@ -55,8 +55,10 @@
             <span class="menu-name">Order your coffee</span><span class="leader" aria-hidden="true"></span><span class="menu-tag" data-tag="coffee">Start</span></a></li>
           <li><a class="menu-line" href="#breathe" data-step="breathe">
             <span class="menu-name">Sit and breathe</span><span class="leader" aria-hidden="true"></span><span class="menu-tag" data-tag="breathe">Start</span></a></li>
-          <li><div class="menu-line is-soon">
-            <span class="menu-name">Choose your breakfast</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Coming soon</span></div></li>
+          <li><a class="menu-line" href="#breakfast" data-step="breakfast">
+            <span class="menu-name">Build your breakfast</span><span class="leader" aria-hidden="true"></span><span class="menu-tag" data-tag="breakfast">Start</span></a></li>
+          <li><a class="menu-line" href="#reading" data-step="reading">
+            <span class="menu-name">Pick something to read</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Open</span></a></li>
           <li><div class="menu-line is-soon">
             <span class="menu-name">Dress your avatar</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Coming soon</span></div></li>
         </ol>
@@ -127,6 +129,8 @@
             <button type="button" class="chip" data-v="calm">Calm: in 4, out 6</button>
             <button type="button" class="chip" data-v="box">Box: 4, 4, 4, 4</button>
             <button type="button" class="chip" data-v="relax">Relax: in 4, hold 7, out 8</button>
+            <button type="button" class="chip" data-v="open">Open awareness</button>
+            <button type="button" class="chip" data-v="noting">Noting</button>
           </div>
         </div>
 
@@ -171,6 +175,51 @@
           <button id="againBtn" class="btn btn-ghost" type="button">Sit again</button>
         </div>
       </div>
+    </section>
+
+    <!-- BREAKFAST -->
+    <section id="view-breakfast" class="view breakfast" data-view="breakfast" aria-labelledby="breakfast-title" hidden>
+      <a class="back" href="#hub">Back to the ritual</a>
+      <h1 id="breakfast-title" tabindex="-1">Build your breakfast</h1>
+      <p class="lede">Pick what goes on your plate and watch the protein and calories add up. Values are approximate for common foods, so check your own labels.</p>
+      <div class="bf-grid">
+        <div class="bf-main">
+          <div class="field"><span class="field-label" id="lblPlates">Start from a plate</span>
+            <div class="chips" id="plates" role="group" aria-labelledby="lblPlates"></div></div>
+          <div class="field"><span class="field-label" id="lblGoal">Protein goal for this meal</span>
+            <div class="chips" id="goalChips" role="group" aria-labelledby="lblGoal">
+              <button type="button" class="chip" data-v="20">20 g</button>
+              <button type="button" class="chip" data-v="30">30 g</button>
+              <button type="button" class="chip" data-v="40">40 g</button>
+            </div></div>
+          <div id="foods"></div>
+        </div>
+        <aside class="bf-total" aria-labelledby="totalTitle">
+          <h2 id="totalTitle">Your plate</h2>
+          <p class="bf-protein"><span id="tProtein">0</span> g protein</p>
+          <div class="bar" id="goalBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progress toward your protein goal"><i id="goalFill"></i></div>
+          <p class="hint" id="goalText" role="status" aria-live="polite"></p>
+          <dl class="macros">
+            <div><dt>Calories</dt><dd id="tKcal">0</dd></div>
+            <div><dt>Carbs</dt><dd id="tCarb">0 g</dd></div>
+            <div><dt>Fat</dt><dd id="tFat">0 g</dd></div>
+          </dl>
+          <ul class="plate-list" id="plateList"></ul>
+          <div class="actions">
+            <button id="saveBreakfast" class="btn btn-primary" type="button">Save as today's breakfast</button>
+            <button id="clearPlate" class="btn btn-ghost" type="button">Clear plate</button>
+          </div>
+          <p class="hint">A planning aid, not medical or dietary advice.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- READING -->
+    <section id="view-reading" class="view reading" data-view="reading" aria-labelledby="reading-title" hidden>
+      <a class="back" href="#hub">Back to the ritual</a>
+      <h1 id="reading-title" tabindex="-1">Pick something to read</h1>
+      <p class="lede">A short shelf for slow mornings. Each link searches Audible, where you can listen or read a sample.</p>
+      <ul class="books" id="books"></ul>
     </section>
   </main>
 
