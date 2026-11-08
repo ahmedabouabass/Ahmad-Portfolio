@@ -102,10 +102,10 @@ in this exact format, so placeholders are easy to find and replace later:
 Examples: `[PLACEHOLDER: School name]`, `[PLACEHOLDER: Start year – End year]`,
 `[PLACEHOLDER: Email address]`, `[PLACEHOLDER: LinkedIn URL]`.
 
-Information still needed from Ahmad:
+All placeholders have now been filled in. Also confirmed by Ahmad:
 
-- A professional photo (optional)
-- A preferred tagline (Claude may suggest options for Ahmad to choose from)
+- Tagline: "Ten years of primary teaching. Four curricula. Every learner included."
+- Professional photo: `images/ahmad-abou-abass.jpg`
 
 ---
 
@@ -185,8 +185,10 @@ Ahmad-Portfolio/
 ├── styles.css       ← all the visual styling
 ├── script.js        ← small interactive features
 ├── cv/
-│   └── README.txt   ← instructions; the CV goes here as Ahmad-CV.pdf
-└── images/          ← photos and icons (create when the first image is added)
+│   ├── README.txt   ← how to update the CV
+│   └── Ahmad-CV.pdf ← Ahmad's CV (linked from the Download CV buttons)
+└── images/
+    └── ahmad-abou-abass.jpg ← Ahmad's professional photo
 ```
 
 ### How the site is set up
@@ -194,8 +196,12 @@ Ahmad-Portfolio/
 - **One place for contact details and the CV:** the `SITE_SETTINGS` object
   at the top of `script.js` holds `cvAvailable`, `cvPath`, `email` and
   `linkedinUrl`. Update these rather than editing links in `index.html`.
-- **Until details are added,** the CV, Email and LinkedIn links show a polite
-  "coming soon" message instead of a broken link.
+- **If a setting is empty** (or `cvAvailable` is false), that link shows a
+  polite "coming soon" message instead of a broken link.
+- **Version history:** the folder is a Git repository (branch `main`). Save a
+  snapshot (commit) after each approved round of changes. Ahmad is signed in
+  to GitHub as `ahmedabouabass`, but nothing has been uploaded; ask before
+  pushing or publishing anything.
 - **Colours and fonts** are CSS variables at the top of `styles.css`.
 
 ### Previewing and testing
