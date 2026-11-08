@@ -12,15 +12,27 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="routine.css">
+  <script src="atmosphere.js" defer></script>
   <script src="routine.js" defer></script>
 </head>
 <body data-view="hub">
+  <div id="scene" class="scene" aria-hidden="true" data-scene="cafe" data-tod="night" data-wx="sunny">
+    <div class="sky-orb"></div>
+    <div class="clouds"><i></i><i></i><i></i><i></i><i></i></div>
+    <div id="lands" class="lands"></div>
+    <div class="scrim"></div>
+    <canvas id="fx" class="fx"></canvas>
+    <div id="flash" class="flash"></div>
+  </div>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="top">
     <a class="brand" href="#hub">Morning Ritual</a>
     <nav class="top-actions" aria-label="Site">
       <a class="quiet-link" href="../">Portfolio</a>
+      <button id="wxChip" class="pill wx" type="button" aria-expanded="false" aria-controls="soundSheet" aria-label="Time and weather. Open scene settings.">
+        <span id="wxIcon" class="wx-icon" aria-hidden="true"></span><span id="wxTime" class="wx-time" aria-hidden="true">--:--</span><span class="wx-sep" aria-hidden="true"></span><span id="wxTemp" aria-hidden="true">--</span>
+      </button>
       <button id="soundBtn" class="pill" type="button" aria-expanded="false" aria-controls="soundSheet">
         <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>Sound
       </button>
@@ -35,6 +47,8 @@
       <div class="hub-copy">
         <h1 id="hub-title" tabindex="-1">Slow mornings, done well.</h1>
         <p class="lede">Order a coffee, let the room settle, then breathe for a few minutes. Breakfast and a bit of style come next.</p>
+
+        <button id="hubAtmo" class="atmo-line" type="button"><span id="nowLine">Checking the weather…</span><span class="edit">Change the scene</span></button>
 
         <ol class="menu" id="menu">
           <li><a class="menu-line" href="#coffee" data-step="coffee">
@@ -161,39 +175,69 @@
   </main>
 
   <footer class="foot">
-    <p>Everything you choose stays on your device. This is a relaxation tool, not medical advice.</p>
+    <p>Everything you choose stays on your device. Weather comes from Open-Meteo. This is a relaxation tool, not medical advice. <a href="../">Back to the portfolio</a></p>
   </footer>
 
-  <!-- SOUND PANEL -->
-  <aside id="soundSheet" class="sheet" aria-label="Sound" hidden>
+  <!-- SCENE + SOUND PANEL -->
+  <aside id="soundSheet" class="sheet" aria-label="Scene and sound" hidden>
     <div class="sheet-head">
-      <h2>Sound</h2>
-      <button id="soundClose" class="icon-btn" type="button" aria-label="Close sound panel">Close</button>
+      <div class="tabs" role="tablist" aria-label="Panel">
+        <button id="tab-scene" class="tab" role="tab" type="button" aria-selected="true" aria-controls="panel-scene">Scene</button>
+        <button id="tab-sound" class="tab" role="tab" type="button" aria-selected="false" aria-controls="panel-sound" tabindex="-1">Sound</button>
+      </div>
+      <button id="soundClose" class="icon-btn" type="button" aria-label="Close panel">Close</button>
     </div>
     <button id="soundToggle" class="btn btn-primary wide" type="button" aria-pressed="false">Play ambience</button>
+    <p class="auto-note" id="autoNote"><span id="autoText">The music follows your scene and the weather.</span> <button id="autoBtn" class="link-btn" type="button" hidden>Match the scene again</button></p>
 
-    <div class="field"><span class="field-label" id="lblPreset">Setting</span>
-      <div class="chips" id="presetChips" role="group" aria-labelledby="lblPreset"></div>
-    </div>
-    <div class="mixer" id="mixer"></div>
-
-    <div class="rule"></div>
-    <h3>Play a video instead</h3>
-    <p class="hint">Plays through YouTube's own player. Some videos block playback outside YouTube.</p>
-    <ul class="tracks" id="tracks"></ul>
-    <form id="ytForm" class="yt-form">
-      <label class="sr-only" for="ytInput">YouTube link</label>
-      <input id="ytInput" type="url" placeholder="Paste a YouTube link" autocomplete="off">
-      <button class="btn btn-ghost" type="submit">Play</button>
-    </form>
-    <div id="ytWrap" class="yt-wrap" hidden>
-      <div id="ytPlayer"></div>
-      <div class="yt-controls">
-        <label class="slider"><span>Video volume</span><input id="ytVol" type="range" min="0" max="100" value="70"></label>
-        <button id="ytStop" class="btn btn-ghost" type="button">Stop video</button>
+    <div id="panel-scene" role="tabpanel" aria-labelledby="tab-scene">
+      <div class="field"><span class="field-label" id="lblScene">Background</span>
+        <div class="chips" id="sceneChips" role="group" aria-labelledby="lblScene"></div>
+      </div>
+      <div class="field"><span class="field-label" id="lblWx">Weather</span>
+        <div class="chips" id="wxChips" role="group" aria-labelledby="lblWx"></div>
+        <p class="hint" id="wxLive" role="status"></p>
+      </div>
+      <div class="field"><span class="field-label" id="lblTod">Time of day</span>
+        <div class="chips" id="todChips" role="group" aria-labelledby="lblTod"></div>
+      </div>
+      <div class="field"><span class="field-label">Place: <span id="placeLabel">Riyadh</span></span>
+        <form id="cityForm" class="yt-form">
+          <label class="sr-only" for="cityInput">Search for a city</label>
+          <input id="cityInput" type="search" placeholder="Search for a city" autocomplete="off">
+          <button class="btn btn-ghost" type="submit">Search</button>
+        </form>
+        <ul class="tracks" id="cityResults"></ul>
+        <div class="row">
+          <button id="geoBtn" class="link-btn" type="button">Use my location</button>
+          <button id="unitBtn" class="link-btn" type="button">Show °F</button>
+        </div>
+        <p class="hint" id="placeMsg" role="status"></p>
       </div>
     </div>
-    <p id="ytMsg" class="yt-msg" role="status" aria-live="polite"></p>
+
+    <div id="panel-sound" role="tabpanel" aria-labelledby="tab-sound" hidden>
+      <div class="mixer" id="masterMix"></div>
+      <details class="more"><summary>Fine-tune the mix</summary><div class="mixer" id="mixer"></div></details>
+
+      <div class="rule"></div>
+      <h3>Play a video instead</h3>
+      <p class="hint">Plays through YouTube's own player. Some videos block playback outside YouTube.</p>
+      <ul class="tracks" id="tracks"></ul>
+      <form id="ytForm" class="yt-form">
+        <label class="sr-only" for="ytInput">YouTube link</label>
+        <input id="ytInput" type="url" placeholder="Paste a YouTube link" autocomplete="off">
+        <button class="btn btn-ghost" type="submit">Play</button>
+      </form>
+      <div id="ytWrap" class="yt-wrap" hidden>
+        <div id="ytPlayer"></div>
+        <div class="yt-controls">
+          <label class="slider"><span>Video volume</span><input id="ytVol" type="range" min="0" max="100" value="70"></label>
+          <button id="ytStop" class="btn btn-ghost" type="button">Stop video</button>
+        </div>
+      </div>
+      <p id="ytMsg" class="yt-msg" role="status" aria-live="polite"></p>
+    </div>
   </aside>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>

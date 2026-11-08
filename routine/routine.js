@@ -23,17 +23,13 @@ const LAYERS = {
   fire: { label: 'Fireplace', scale: 0.8 },
   pad:  { label: 'Soft pad', scale: 0.5 }
 };
-const PRESETS = {
-  rainy:    { label: 'Rainy café',    v: { rain: 0.55, cafe: 0.5,  fire: 0,   pad: 0.2 } },
-  fireside: { label: 'Fireside',      v: { rain: 0,    cafe: 0.15, fire: 0.7, pad: 0.35 } },
-  storm:    { label: 'Window storm',  v: { rain: 0.9,  cafe: 0,    fire: 0,   pad: 0.25 } },
-  dawn:     { label: 'Quiet dawn',    v: { rain: 0,    cafe: 0,    fire: 0,   pad: 0.7 } }
-};
+const EXT = window.MR_EXT || null;
+if (EXT) Object.assign(LAYERS, EXT.layers);
 
 class Engine {
   constructor() {
     this.ctx = null; this.layers = {}; this.noise = {}; this.bowls = [];
-    this.vols = Object.assign({}, PRESETS.rainy.v); this.master = 0.7;
+    this.vols = {}; this.master = 0.7; this.night = false; this.weather = 'sunny';
     this.playing = false; this.timer = null;
   }
   ensure() {
@@ -204,6 +200,8 @@ class Engine {
   }
 }
 const audio = new Engine();
+if (EXT) Object.assign(Engine.prototype, EXT.builders);
+Object.keys(LAYERS).forEach(k => { audio.vols[k] = 0; });
 
 /* ---- spoken cues (browser speech) ---- */
 const canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
@@ -219,52 +217,73 @@ function speak(text) {
   try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 0.86; u.pitch = 0.95; u.volume = 0.9; if (voice) { u.voice = voice; u.lang = voice.lang; } speechSynthesis.speak(u); } catch (e) {}
 }
 
-/* ============ Sound panel ============ */
-const sound = Object.assign({ preset: 'rainy', vols: Object.assign({}, PRESETS.rainy.v), master: 0.7 }, store.get('sound', {}));
-audio.vols = Object.assign({}, sound.vols); audio.master = sound.master;
-const sheet = $('#soundSheet'), soundBtn = $('#soundBtn');
-function saveSound() { store.set('sound', { preset: sound.preset, vols: audio.vols, master: audio.master }); }
+/* ============ Scene + sound panel ============ */
+const sound = Object.assign({ auto: true, vols: {}, master: 0.7 }, store.get('sound', {}));
+Object.assign(audio.vols, sound.vols); audio.master = sound.master;
+const sheet = $('#soundSheet'), soundBtn = $('#soundBtn'), wxBtn = $('#wxChip');
+let activeTab = 'scene';
+function saveSound() { store.set('sound', { auto: sound.auto, vols: audio.vols, master: audio.master }); }
 function buildSoundUI() {
-  const pc = $('#presetChips'); pc.innerHTML = '';
-  Object.entries(PRESETS).forEach(([id, p]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.dataset.v = id; b.textContent = p.label; b.addEventListener('click', () => { applyPreset(id); }); pc.appendChild(b); });
   const mx = $('#mixer'); mx.innerHTML = '';
   Object.entries(LAYERS).forEach(([k, l]) => {
     const lab = document.createElement('label'); lab.className = 'slider';
     lab.innerHTML = '<span>' + l.label + '</span><input type="range" min="0" max="100" data-layer="' + k + '">';
-    const inp = $('input', lab); inp.value = Math.round(audio.vols[k] * 100);
-    inp.addEventListener('input', () => { audio.setVol(k, inp.value / 100); sound.preset = 'custom'; syncSoundUI(); saveSound(); });
+    const inp = $('input', lab); inp.value = Math.round((audio.vols[k] || 0) * 100);
+    inp.addEventListener('input', () => { audio.setVol(k, inp.value / 100); sound.auto = false; syncSoundUI(); saveSound(); });
     mx.appendChild(lab);
   });
+  const mm = $('#masterMix'); mm.innerHTML = '';
   const lab = document.createElement('label'); lab.className = 'slider';
   lab.innerHTML = '<span>Overall volume</span><input type="range" min="0" max="100" id="masterVol">';
   const mv = $('input', lab); mv.value = Math.round(audio.master * 100);
   mv.addEventListener('input', () => { audio.setMaster(mv.value / 100); saveSound(); });
-  mx.appendChild(lab);
+  mm.appendChild(lab);
   const tr = $('#tracks'); tr.innerHTML = '';
   TRACKS.forEach(t => { const li = document.createElement('li'); const b = document.createElement('button'); b.type = 'button'; b.textContent = t.title; b.addEventListener('click', () => playYT(t.id)); li.appendChild(b); tr.appendChild(li); });
 }
 function syncSoundUI() {
-  $$('#presetChips .chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === sound.preset)));
-  $$('#mixer input[data-layer]').forEach(i => { i.value = Math.round(audio.vols[i.dataset.layer] * 100); });
+  $$('#mixer input[data-layer]').forEach(i => { i.value = Math.round((audio.vols[i.dataset.layer] || 0) * 100); });
   const t = $('#soundToggle'); t.setAttribute('aria-pressed', String(audio.playing)); t.textContent = audio.playing ? 'Pause ambience' : 'Play ambience';
+  $('#autoText').textContent = sound.auto ? 'The music follows your scene and the weather.' : 'You set the mix by hand.';
+  $('#autoBtn').hidden = sound.auto;
   document.body.classList.toggle('is-playing', audio.playing || ytPlaying);
 }
-function applyPreset(id) {
-  const p = PRESETS[id]; if (!p) return; sound.preset = id;
-  Object.keys(LAYERS).forEach(k => audio.setVol(k, p.v[k]));
+function applyMix(m) {
+  Object.keys(LAYERS).forEach(k => { audio.vols[k] = m[k] || 0; });
+  if (audio.playing) audio.syncLayers();
   syncSoundUI(); saveSound();
 }
 function toggleSound() {
   if (audio.playing) { audio.stop(); } else { if (!audio.start()) { toast('This browser can\'t play generated sound.'); } }
   syncSoundUI();
 }
-function openSheet(open) {
-  sheet.hidden = !open; soundBtn.setAttribute('aria-expanded', String(open));
-  if (open) { const f = $('#soundToggle'); f && f.focus({ preventScroll: true }); } else { soundBtn.focus({ preventScroll: true }); }
+function setTab(name, focus) {
+  activeTab = name;
+  ['scene', 'sound'].forEach(n => {
+    const on = n === name, tb = $('#tab-' + n);
+    tb.setAttribute('aria-selected', String(on)); tb.tabIndex = on ? 0 : -1; $('#panel-' + n).hidden = !on;
+    if (on && focus) tb.focus({ preventScroll: true });
+  });
 }
-soundBtn.addEventListener('click', () => openSheet(sheet.hidden));
+function openSheet(open, tab) {
+  sheet.hidden = !open;
+  [soundBtn, wxBtn].forEach(b => b.setAttribute('aria-expanded', String(open)));
+  if (open) { setTab(tab || activeTab, true); }
+  else { (activeTab === 'scene' ? wxBtn : soundBtn).focus({ preventScroll: true }); }
+}
+function toggleSheet(tab) {
+  if (sheet.hidden) openSheet(true, tab);
+  else if (activeTab === tab) openSheet(false);
+  else setTab(tab, true);
+}
+soundBtn.addEventListener('click', () => toggleSheet('sound'));
 $('#soundClose').addEventListener('click', () => openSheet(false));
 $('#soundToggle').addEventListener('click', toggleSound);
+['scene', 'sound'].forEach(n => {
+  const tb = $('#tab-' + n);
+  tb.addEventListener('click', () => setTab(n, false));
+  tb.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); setTab(n === 'scene' ? 'sound' : 'scene', true); } });
+});
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !sheet.hidden) openSheet(false); });
 
 /* ============ YouTube (official player) ============ */
@@ -358,7 +377,7 @@ function order() {
   if (brewing) return; brewing = true;
   const btn = $('#orderBtn'); btn.disabled = true; cup.classList.remove('ready'); cup.style.setProperty('--fill', 0.001); $('#coffeeNext').hidden = true;
   $$('#drinks .drink').forEach(b => b.disabled = true);
-  if ($('#orderSound').checked && !audio.playing) { applyPreset(drink.preset); if (!audio.start()) toast('This browser can\'t play generated sound.'); syncSoundUI(); }
+  if ($('#orderSound').checked && !audio.playing) { if (!audio.start()) toast('This browser can\'t play generated sound.'); syncSoundUI(); }
   else audio.ensure();
   const dur = reduce ? 1200 : 5200, t0 = Date.now(); let last = -1;
   const status = $('#brewStatus');
@@ -515,4 +534,5 @@ function route() {
 window.addEventListener('hashchange', route);
 
 buildSoundUI(); syncSoundUI(); renderDrinks(); syncSetup(); route();
+if (EXT) EXT.init({ audio, store, sound, applyMix, toggleSheet, syncSoundUI, saveSound, reduce });
 })();
