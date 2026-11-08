@@ -199,9 +199,11 @@ Ahmad-Portfolio/
 - **If a setting is empty** (or `cvAvailable` is false), that link shows a
   polite "coming soon" message instead of a broken link.
 - **Version history:** the folder is a Git repository (branch `main`). Save a
-  snapshot (commit) after each approved round of changes. Ahmad is signed in
-  to GitHub as `ahmedabouabass`, but nothing has been uploaded; ask before
-  pushing or publishing anything.
+  snapshot (commit) after each approved round of changes.
+- **Live website:** https://ahmedabouabass.github.io/Ahmad-Portfolio/
+  (GitHub Pages, from the `main` branch of the public repository
+  `ahmedabouabass/Ahmad-Portfolio`). Pushing to `main` updates the live site
+  within a minute or two, so **ask Ahmad before every push**.
 - **Colours and fonts** are CSS variables at the top of `styles.css`.
 
 ### Previewing and testing
