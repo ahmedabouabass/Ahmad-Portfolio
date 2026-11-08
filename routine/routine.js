@@ -360,10 +360,10 @@ function order() {
   $$('#drinks .drink').forEach(b => b.disabled = true);
   if ($('#orderSound').checked && !audio.playing) { applyPreset(drink.preset); if (!audio.start()) toast('This browser can\'t play generated sound.'); syncSoundUI(); }
   else audio.ensure();
-  const dur = reduce ? 1200 : 5200, t0 = performance.now(); let last = -1;
+  const dur = reduce ? 1200 : 5200, t0 = Date.now(); let last = -1;
   const status = $('#brewStatus');
   const iv = setInterval(() => {
-    const f = clamp((performance.now() - t0) / dur, 0, 1), e = f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;
+    const f = clamp((Date.now() - t0) / dur, 0, 1), e = f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;
     cup.style.setProperty('--fill', Math.max(0.001, e));
     const i = Math.min(2, Math.floor(f * 3)); if (i !== last) { last = i; status.textContent = drink.steps[i] + '…'; }
     if (f >= 1) { clearInterval(iv); done(); }
