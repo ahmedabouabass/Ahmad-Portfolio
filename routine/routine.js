@@ -362,12 +362,12 @@ function order() {
   else audio.ensure();
   const dur = reduce ? 1200 : 5200, t0 = performance.now(); let last = -1;
   const status = $('#brewStatus');
-  (function frame(now) {
-    const f = clamp((now - t0) / dur, 0, 1), e = f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;
+  const iv = setInterval(() => {
+    const f = clamp((performance.now() - t0) / dur, 0, 1), e = f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;
     cup.style.setProperty('--fill', Math.max(0.001, e));
     const i = Math.min(2, Math.floor(f * 3)); if (i !== last) { last = i; status.textContent = drink.steps[i] + '…'; }
-    if (f < 1) requestAnimationFrame(frame); else done();
-  })(t0);
+    if (f >= 1) { clearInterval(iv); done(); }
+  }, 50);
   function done() {
     cup.classList.add('ready'); status.textContent = 'Your ' + drink.name.toLowerCase() + ' is ready. Take your time.';
     audio.ding(); store.set('coffeeDay', today());
