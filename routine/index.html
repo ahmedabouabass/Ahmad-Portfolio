@@ -10,10 +10,12 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230E1522'/%3E%3Cpath d='M16 26h28v8a14 14 0 0 1-28 0z' fill='%23C9974B'/%3E%3Cpath d='M44 28h3a5 5 0 0 1 0 10h-3' fill='none' stroke='%23C9974B' stroke-width='3'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="routine.css">
   <script src="atmosphere.js" defer></script>
   <script src="routine.js" defer></script>
+  <script src="calendar.js" defer></script>
+  <script src="i18n.js" defer></script>
 </head>
 <body data-view="hub">
   <div id="scene" class="scene" aria-hidden="true" data-scene="cafe" data-tod="night" data-wx="sunny">
@@ -30,6 +32,7 @@
     <a class="brand" href="#hub">Morning Ritual</a>
     <nav class="top-actions" aria-label="Site">
       <a class="quiet-link" href="../">Portfolio</a>
+      <button id="langBtn" class="pill lang-btn" type="button" data-no-i18n>العربية</button>
       <button id="wxChip" class="pill wx" type="button" aria-expanded="false" aria-controls="soundSheet" aria-label="Time and weather. Open scene settings.">
         <span id="wxIcon" class="wx-icon" aria-hidden="true"></span><span id="wxTime" class="wx-time" aria-hidden="true">--:--</span><span class="wx-sep" aria-hidden="true"></span><span id="wxTemp" aria-hidden="true">--</span>
       </button>
@@ -47,6 +50,7 @@
       <div class="hub-copy">
         <h1 id="hub-title" tabindex="-1">Slow mornings, done well.</h1>
         <p class="lede">Coffee, a few minutes of breathing, then breakfast. About fifteen minutes, one step at a time.</p>
+        <p class="today-line" id="todayLine" data-no-i18n hidden></p>
         <a class="btn btn-primary btn-start" id="hubCta" href="#coffee">Start my morning</a>
         <p class="stats" id="stats" hidden></p>
 
@@ -64,6 +68,8 @@
             <span class="menu-name">Choose your music</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Open</span></a></li>
           <li><a class="menu-line" href="#reading" data-step="reading">
             <span class="menu-name">Pick something to read</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Open</span></a></li>
+          <li><a class="menu-line" href="#calendar" data-step="calendar">
+            <span class="menu-name">Your calendar</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Open</span></a></li>
           <li><div class="menu-line is-soon">
             <span class="menu-name">Dress your avatar</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Coming soon</span></div></li>
         </ol>
@@ -231,6 +237,14 @@
       <h1 id="reading-title" tabindex="-1">Pick something to read</h1>
       <p class="lede">A short shelf for slow mornings. Each link searches Audible, where you can listen or read a sample.</p>
       <ul class="books" id="books"></ul>
+    </section>
+
+    <!-- CALENDAR -->
+    <section id="view-calendar" class="view calendar" data-view="calendar" aria-labelledby="calendar-title" hidden>
+      <a class="back" href="#hub">Back to the ritual</a>
+      <h1 id="calendar-title" tabindex="-1">Your calendar</h1>
+      <p class="lede">Public holidays, weekends and the Hijri date for the country you are in.</p>
+      <div id="calDyn" data-no-i18n></div>
     </section>
   </main>
 

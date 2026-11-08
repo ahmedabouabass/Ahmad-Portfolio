@@ -208,13 +208,14 @@ const canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in wi
 let voice = null;
 function pickVoice() {
   if (!canSpeak) return;
-  const vs = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
-  voice = vs.find(v => /Samantha|Daniel|Serena|Google UK English Female|Natural|Online/i.test(v.name)) || vs.find(v => /en-GB/i.test(v.lang)) || vs[0] || null;
+  const arabic = !!(window.MR_I18N && MR_I18N.lang === 'ar');
+  const vs = speechSynthesis.getVoices().filter(v => (arabic ? /^ar/i : /^en/i).test(v.lang));
+  voice = arabic ? (vs.find(v => /ar[-_]SA/i.test(v.lang)) || vs[0] || null) : (vs.find(v => /Samantha|Daniel|Serena|Google UK English Female|Natural|Online/i.test(v.name)) || vs.find(v => /en-GB/i.test(v.lang)) || vs[0] || null);
 }
-if (canSpeak) { pickVoice(); speechSynthesis.addEventListener && speechSynthesis.addEventListener('voiceschanged', pickVoice); }
+if (canSpeak) { pickVoice(); speechSynthesis.addEventListener && speechSynthesis.addEventListener('voiceschanged', pickVoice); document.addEventListener('mr:lang', pickVoice); }
 function speak(text) {
   if (!canSpeak) return;
-  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 0.86; u.pitch = 0.95; u.volume = 0.9; if (voice) { u.voice = voice; u.lang = voice.lang; } speechSynthesis.speak(u); } catch (e) {}
+  try { speechSynthesis.cancel(); const arabic = !!(window.MR_I18N && MR_I18N.lang === 'ar'), u = new SpeechSynthesisUtterance(arabic ? MR_I18N.tr(text) : text); u.rate = 0.86; u.pitch = 0.95; u.volume = 0.9; if (voice) { u.voice = voice; u.lang = voice.lang; } else u.lang = arabic ? 'ar-SA' : 'en-GB'; speechSynthesis.speak(u); } catch (e) {}
 }
 
 /* ============ Scene + sound panel ============ */
@@ -664,11 +665,11 @@ function refreshHub() {
   const next = !cDone ? [started ? 'Order your coffee' : 'Start my morning', '#coffee'] : !bDone ? ['Continue to breathing', '#breathe'] : !fDone ? ['Continue to breakfast', '#breakfast'] : ['Sit again', '#breathe'];
   cta.textContent = next[0]; cta.href = next[1];
 }
-const VIEWS = ['hub', 'coffee', 'breathe', 'breakfast', 'music', 'reading'];
+const VIEWS = ['hub', 'coffee', 'breathe', 'breakfast', 'music', 'reading', 'calendar'];
 function route() {
   let h = location.hash.slice(1); if (!VIEWS.includes(h)) h = 'hub';
   if ((S.state === 'running' || S.state === 'paused') && h !== 'breathe') { toast('Finish or end your session first.'); location.hash = '#breathe'; return; }
-  VIEWS.forEach(v => { $('#view-' + v).hidden = v !== h; }); document.body.dataset.view = h;
+  VIEWS.forEach(v => { $('#view-' + v).hidden = v !== h; }); document.body.dataset.view = h; if (window.MR_CAL) MR_CAL.onRoute(h);
   if (h === 'hub') refreshHub(); if (h === 'breathe' && S.state === 'idle') { showPanel('bSetup'); syncSetup(); }
   const t = $('#view-' + h + ' h1'); if (t) t.focus({ preventScroll: true }); window.scrollTo(0, 0);
 }

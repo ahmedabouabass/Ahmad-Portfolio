@@ -302,7 +302,7 @@ const ICON = {
 
 /* ============ Controller ============ */
 let A = null, fxr = null;
-const st = { scene: 'cafe', wx: 'live', tod: 'auto', units: 'c', place: { name: 'Riyadh', lat: 24.7136, lon: 46.6753 }, live: null, err: false };
+const st = { scene: 'cafe', wx: 'live', tod: 'auto', units: 'c', place: { name: 'Riyadh', lat: 24.7136, lon: 46.6753, cc: 'SA' }, live: null, err: false };
 let lastMixKey = '', flashTimer = 0;
 const $ = (s, r = document) => r.querySelector(s);
 const WXLIST = [['live', 'Live'], ['sunny', 'Sunny'], ['cloudy', 'Cloudy'], ['rain', 'Rain'], ['snow', 'Snow'], ['storm', 'Storm']];
@@ -317,7 +317,7 @@ function effTod() {
   return h < 5 || h >= 19 ? 'night' : (h < 8 || h >= 17 ? 'dusk' : 'day');
 }
 const tempText = () => { if (!st.live) return '--'; const c = st.live.temp, v = st.units === 'f' ? c * 9 / 5 + 32 : c; return Math.round(v) + '°' + (st.units === 'f' ? 'F' : 'C'); };
-const timeText = () => { try { return new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit', timeZone: (st.live && st.live.tz) || undefined }).format(new Date()); } catch (e) { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); } };
+const timeText = () => { try { return new Intl.DateTimeFormat((window.MR_I18N && MR_I18N.lang === 'ar') ? 'ar-u-nu-latn' : [], { hour: '2-digit', minute: '2-digit', timeZone: (st.live && st.live.tz) || undefined }).format(new Date()); } catch (e) { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); } };
 
 function save() { A.store.set('atm', { scene: st.scene, wx: st.wx, tod: st.tod, units: st.units, place: st.place }); }
 
@@ -335,11 +335,13 @@ function paint() {
   A.audio.night = tod === 'night'; A.audio.weather = kind;
   fxr.setKind(kind); lightning(kind);
   const chip = $('#wxChip'); $('#wxIcon').innerHTML = ICON[kind]; $('#wxTemp').textContent = tempText();
-  const label = st.live ? st.live.label.toLowerCase() : 'weather unavailable';
-  chip.setAttribute('aria-label', 'Time and weather: ' + timeText() + ', ' + tempText() + ', ' + label + '. Open scene settings.');
+  const ar = !!(window.MR_I18N && MR_I18N.lang === 'ar'), L = s => ar ? MR_I18N.tr(s) : s, PN = L(st.place.name);
+  const label = st.live ? (ar ? L('wx:' + st.live.label) : st.live.label.toLowerCase()) : (ar ? 'الطقس غير متاح' : 'weather unavailable');
+  chip.setAttribute('aria-label', ar ? 'الوقت والطقس: ' + timeText() + '، ' + tempText() + '، ' + label + '. افتح إعدادات المشهد.' : 'Time and weather: ' + timeText() + ', ' + tempText() + ', ' + label + '. Open scene settings.');
   const now = $('#nowLine');
-  if (now) now.textContent = st.place.name + ', ' + timeText() + '. ' + (st.live ? tempText() + ' and ' + label + '.' : 'Weather is unavailable right now.') + (st.wx !== 'live' ? ' Showing ' + st.wx + '.' : '');
-  const lv = $('#wxLive'); if (lv) lv.textContent = st.live ? 'Live now in ' + st.place.name + ': ' + label + ', ' + tempText() + '.' : (st.err ? 'Live weather is unavailable. Check your connection.' : 'Loading live weather…');
+  if (now) now.textContent = ar ? PN + '، ' + timeText() + '. ' + (st.live ? tempText() + '، ' + label + '.' : 'الطقس غير متاح الآن.') + (st.wx !== 'live' ? ' المعروض: ' + L(st.wx[0].toUpperCase() + st.wx.slice(1)) + '.' : '')
+    : st.place.name + ', ' + timeText() + '. ' + (st.live ? tempText() + ' and ' + label + '.' : 'Weather is unavailable right now.') + (st.wx !== 'live' ? ' Showing ' + st.wx + '.' : '');
+  const lv = $('#wxLive'); if (lv) lv.textContent = st.live ? (ar ? 'الآن في ' + PN + ': ' + label + '، ' + tempText() + '.' : 'Live now in ' + st.place.name + ': ' + label + ', ' + tempText() + '.') : (st.err ? 'Live weather is unavailable. Check your connection.' : 'Loading live weather…');
   const key = st.scene + '|' + kind;
   if (A.sound.auto && key !== lastMixKey) { lastMixKey = key; A.applyMix(mixFor(st.scene, kind)); }
 }
@@ -422,11 +424,11 @@ function syncChips() {
 async function searchCity(q) {
   const ul = $('#cityResults'), msg = $('#placeMsg'); ul.innerHTML = ''; msg.textContent = 'Searching…';
   try {
-    const r = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(q) + '&count=5&language=en&format=json'); const j = await r.json();
+    const r = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(q) + '&count=5&language=' + ((window.MR_I18N && MR_I18N.lang === 'ar') ? 'ar' : 'en') + '&format=json'); const j = await r.json();
     if (!j.results || !j.results.length) { msg.textContent = 'No city found. Check the spelling or try a larger nearby city.'; return; }
     msg.textContent = '';
     j.results.forEach(x => { const li = document.createElement('li'), b = document.createElement('button'); b.type = 'button'; b.textContent = [x.name, x.admin1, x.country].filter(Boolean).join(', ');
-      b.addEventListener('click', () => { st.place = { name: x.name, lat: x.latitude, lon: x.longitude }; st.live = null; ul.innerHTML = ''; $('#cityInput').value = ''; save(); syncChips(); paint(); fetchWeather(); }); li.appendChild(b); ul.appendChild(li); });
+      b.addEventListener('click', () => { st.place = { name: x.name, lat: x.latitude, lon: x.longitude, cc: x.country_code }; st.live = null; ul.innerHTML = ''; $('#cityInput').value = ''; save(); syncChips(); paint(); fetchWeather(); }); li.appendChild(b); ul.appendChild(li); });
   } catch (e) { msg.textContent = 'Search is unavailable. Check your connection and try again.'; }
 }
 function useLocation() {
@@ -451,6 +453,7 @@ function init(api) {
   const ha = $('#hubAtmo'); if (ha) ha.addEventListener('click', () => A.toggleSheet('scene'));
   $('#autoBtn').addEventListener('click', () => { A.sound.auto = true; lastMixKey = ''; paint(); A.syncSoundUI(); A.saveSound(); });
   drawScene(); syncChips(); fxr.resize(); paint(); clock(); fetchWeather();
+  document.addEventListener('mr:lang', () => { syncChips(); paint(); clock(); });
   setInterval(clock, 1000); setInterval(fetchWeather, 15 * 60 * 1000); setInterval(paint, 60000);
   let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => fxr.resize(), 200); });
 }
