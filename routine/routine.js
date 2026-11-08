@@ -660,7 +660,8 @@ function refreshHub() {
   const s = stats(), el = $('#stats');
   if (s) { el.hidden = false; el.textContent = s.n + (s.n === 1 ? ' session' : ' sessions') + ', ' + s.mins + ' minutes' + (s.streak > 1 ? ', ' + s.streak + ' days in a row.' : '.'); } else el.hidden = true;
   const cta = $('#hubCta'), cDone = store.get('coffeeDay', '') === t, bDone = store.get('breatheDay', '') === t, fDone = store.get('breakfastDay', '') === t;
-  const next = !cDone ? ['Start with coffee', '#coffee'] : !bDone ? ['Continue to breathing', '#breathe'] : !fDone ? ['Build your breakfast', '#breakfast'] : ['Sit again', '#breathe'];
+  const started = cDone || bDone || fDone;
+  const next = !cDone ? [started ? 'Order your coffee' : 'Start my morning', '#coffee'] : !bDone ? ['Continue to breathing', '#breathe'] : !fDone ? ['Continue to breakfast', '#breakfast'] : ['Sit again', '#breathe'];
   cta.textContent = next[0]; cta.href = next[1];
 }
 const VIEWS = ['hub', 'coffee', 'breathe', 'breakfast', 'music', 'reading'];
