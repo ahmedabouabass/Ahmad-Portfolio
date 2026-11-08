@@ -18,10 +18,10 @@
    When you have the information, change these values.
    You only need to change them here: the whole page updates. */
 const SITE_SETTINGS = {
-  // Step 1: put your CV PDF in the "cv" folder and name it Ahmad-CV.pdf
+  // Step 1: the CV page lives in the "cv" folder (cv/index.html)
   // Step 2: change false to true
   cvAvailable: true,
-  cvPath: "cv/Ahmad-CV.pdf",
+  cvPath: "cv/",
 
   // Example: "name@example.com"  (leave "" until you decide)
   email: "ahmed.abouabass@gmail.com",
@@ -178,9 +178,8 @@ function setupCvLinks() {
 
   cvLinks.forEach((link) => {
     if (SITE_SETTINGS.cvAvailable) {
-      // CV is ready: the link downloads the PDF
+      // CV is ready: the link opens the CV page (print or save as PDF from there)
       link.setAttribute("href", SITE_SETTINGS.cvPath);
-      link.setAttribute("download", "");
     } else {
       // CV not added yet: show a friendly message instead of a broken link
       link.addEventListener("click", (event) => {

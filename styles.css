@@ -1136,3 +1136,34 @@ svg {
     transform: none;
   }
 }
+
+
+/* ---------- The Morning Ritual card (philosophy section) ---------- */
+.ritual-card {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2.5rem;
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  border: 1px solid rgba(201, 151, 75, 0.45);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.04);
+}
+.ritual-text { flex: 1 1 28rem; max-width: 42rem; }
+.ritual-text h3 { margin: 0 0 0.5rem; font-size: 1.35rem; color: #fff; }
+.ritual-text p { margin: 0; color: rgba(255, 255, 255, 0.82); line-height: 1.65; }
+.ritual-link {
+  flex: 0 0 auto;
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;
+  background: var(--color-gold);
+  color: var(--color-navy-deep);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.ritual-link:hover { background: #d8a85e; transform: translateY(-1px); }
+.ritual-link:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
