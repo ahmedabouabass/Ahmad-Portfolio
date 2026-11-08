@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Morning Ritual | Ahmad Abou Abass</title>
+  <meta name="description" content="Order a virtual coffee, settle into soft ambience and sit a guided mindfulness session with gentle chimes.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0E1522">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230E1522'/%3E%3Cpath d='M16 26h28v8a14 14 0 0 1-28 0z' fill='%23C9974B'/%3E%3Cpath d='M44 28h3a5 5 0 0 1 0 10h-3' fill='none' stroke='%23C9974B' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="routine.css">
+  <script src="routine.js" defer></script>
+</head>
+<body data-view="hub">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="top">
+    <a class="brand" href="#hub">Morning Ritual</a>
+    <nav class="top-actions" aria-label="Site">
+      <a class="quiet-link" href="../">Portfolio</a>
+      <button id="soundBtn" class="pill" type="button" aria-expanded="false" aria-controls="soundSheet">
+        <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>Sound
+      </button>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <noscript><p class="notice">This page needs JavaScript to play sound and run the timer.</p></noscript>
+
+    <!-- HUB -->
+    <section id="view-hub" class="view hub" data-view="hub" aria-labelledby="hub-title">
+      <div class="hub-copy">
+        <h1 id="hub-title" tabindex="-1">Slow mornings, done well.</h1>
+        <p class="lede">Order a coffee, let the room settle, then breathe for a few minutes. Breakfast and a bit of style come next.</p>
+
+        <ol class="menu" id="menu">
+          <li><a class="menu-line" href="#coffee" data-step="coffee">
+            <span class="menu-name">Order your coffee</span><span class="leader" aria-hidden="true"></span><span class="menu-tag" data-tag="coffee">Start</span></a></li>
+          <li><a class="menu-line" href="#breathe" data-step="breathe">
+            <span class="menu-name">Sit and breathe</span><span class="leader" aria-hidden="true"></span><span class="menu-tag" data-tag="breathe">Start</span></a></li>
+          <li><div class="menu-line is-soon">
+            <span class="menu-name">Choose your breakfast</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Coming soon</span></div></li>
+          <li><div class="menu-line is-soon">
+            <span class="menu-name">Dress your avatar</span><span class="leader" aria-hidden="true"></span><span class="menu-tag">Coming soon</span></div></li>
+        </ol>
+
+        <p class="stats" id="stats" hidden></p>
+        <a class="btn btn-primary" id="hubCta" href="#coffee">Start with coffee</a>
+      </div>
+      <div class="hub-cup" id="hubCup" aria-hidden="true"></div>
+    </section>
+
+    <!-- COFFEE -->
+    <section id="view-coffee" class="view coffee" data-view="coffee" aria-labelledby="coffee-title" hidden>
+      <div class="coffee-stage">
+        <div id="brewCup" class="brew-cup" role="img" aria-label="Your cup, filling as the drink is made"></div>
+        <p id="brewStatus" class="brew-status" role="status" aria-live="polite">Pick a drink and place your order.</p>
+      </div>
+      <div class="coffee-order">
+        <a class="back" href="#hub">Back to the ritual</a>
+        <h1 id="coffee-title" tabindex="-1">What are you having?</h1>
+        <ul class="drinks" id="drinks"></ul>
+        <label class="check"><input type="checkbox" id="orderSound" checked><span>Play soft ambience with my order</span></label>
+        <div class="actions">
+          <button id="orderBtn" class="btn btn-primary" type="button">Place order</button>
+          <a id="coffeeNext" class="btn btn-ghost" href="#breathe" hidden>Continue to breathing</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- BREATHE -->
+    <section id="view-breathe" class="view breathe" data-view="breathe" aria-labelledby="breathe-title" hidden>
+      <div id="bSetup" class="b-panel">
+        <a class="back" href="#hub">Back to the ritual</a>
+        <h1 id="breathe-title" tabindex="-1">Sit and breathe</h1>
+        <p class="lede">Set the length, choose how you want to be nudged, then begin. A bowl rings to start and to finish.</p>
+
+        <div class="field"><span class="field-label" id="lblMins">Length</span>
+          <div class="chips" id="chipsMins" role="group" aria-labelledby="lblMins">
+            <button type="button" class="chip" data-v="3">3 min</button>
+            <button type="button" class="chip" data-v="5">5 min</button>
+            <button type="button" class="chip" data-v="10">10 min</button>
+            <button type="button" class="chip" data-v="15">15 min</button>
+            <button type="button" class="chip" data-v="20">20 min</button>
+            <label class="custom">Other <input id="customMins" type="number" inputmode="numeric" min="1" max="60" placeholder="1 to 60" aria-label="Custom length in minutes"></label>
+          </div>
+        </div>
+
+        <div class="field"><span class="field-label" id="lblEvery">Chime during the session</span>
+          <div class="chips" id="chipsEvery" role="group" aria-labelledby="lblEvery">
+            <button type="button" class="chip" data-v="0">Off</button>
+            <button type="button" class="chip" data-v="1">Every minute</button>
+            <button type="button" class="chip" data-v="5">Every 5 minutes</button>
+            <button type="button" class="chip" data-v="10">Every 10 minutes</button>
+          </div>
+        </div>
+
+        <div class="field"><span class="field-label" id="lblStyle">Chime style</span>
+          <div class="chips" id="chipsStyle" role="group" aria-labelledby="lblStyle">
+            <button type="button" class="chip" data-v="bowl">Singing bowl</button>
+            <button type="button" class="chip" data-v="voice">Spoken minutes</button>
+            <button type="button" class="chip" data-v="both">Bowl and voice</button>
+          </div>
+          <p class="hint" id="voiceHint" hidden>Spoken minutes need a browser that supports speech. Your device doesn't, so the bowl will be used.</p>
+        </div>
+
+        <div class="field"><span class="field-label" id="lblGuide">Breathing guide</span>
+          <div class="chips" id="chipsGuide" role="group" aria-labelledby="lblGuide">
+            <button type="button" class="chip" data-v="off">None</button>
+            <button type="button" class="chip" data-v="calm">Calm: in 4, out 6</button>
+            <button type="button" class="chip" data-v="box">Box: 4, 4, 4, 4</button>
+            <button type="button" class="chip" data-v="relax">Relax: in 4, hold 7, out 8</button>
+          </div>
+        </div>
+
+        <p class="summary" id="summary"></p>
+        <div class="actions"><button id="beginBtn" class="btn btn-primary" type="button">Begin session</button></div>
+      </div>
+
+      <div id="bRun" class="b-panel b-run" hidden>
+        <div class="ring-wrap">
+          <div class="orb" id="orb" aria-hidden="true"></div>
+          <svg class="ring" viewBox="0 0 300 300" aria-hidden="true">
+            <circle class="ring-track" cx="150" cy="150" r="136"/>
+            <circle class="ring-bar" id="ringBar" cx="150" cy="150" r="136"/>
+          </svg>
+          <div class="ring-text">
+            <p class="cue" id="cue" aria-live="off"></p>
+            <p class="time" id="time" role="timer">10:00</p>
+            <p class="next" id="nextChime"></p>
+          </div>
+        </div>
+        <div class="actions run-actions">
+          <button id="pauseBtn" class="btn btn-ghost" type="button">Pause</button>
+          <button id="endBtn" class="btn btn-ghost" type="button">End session</button>
+        </div>
+        <p class="sr-only" id="runStatus" role="status" aria-live="polite"></p>
+      </div>
+
+      <div id="bDone" class="b-panel b-done" hidden>
+        <h2 id="doneTitle" tabindex="-1">Session complete</h2>
+        <p class="lede" id="doneText"></p>
+        <div class="field"><span class="field-label" id="lblMood">How do you feel?</span>
+          <div class="chips" id="chipsMood" role="group" aria-labelledby="lblMood">
+            <button type="button" class="chip" data-v="Calm">Calm</button>
+            <button type="button" class="chip" data-v="Clear">Clear</button>
+            <button type="button" class="chip" data-v="Light">Light</button>
+            <button type="button" class="chip" data-v="About the same">About the same</button>
+          </div>
+          <p class="hint">Saved only on this device.</p>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary" href="#hub">Back to the ritual</a>
+          <button id="againBtn" class="btn btn-ghost" type="button">Sit again</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Everything you choose stays on your device. This is a relaxation tool, not medical advice.</p>
+  </footer>
+
+  <!-- SOUND PANEL -->
+  <aside id="soundSheet" class="sheet" aria-label="Sound" hidden>
+    <div class="sheet-head">
+      <h2>Sound</h2>
+      <button id="soundClose" class="icon-btn" type="button" aria-label="Close sound panel">Close</button>
+    </div>
+    <button id="soundToggle" class="btn btn-primary wide" type="button" aria-pressed="false">Play ambience</button>
+
+    <div class="field"><span class="field-label" id="lblPreset">Setting</span>
+      <div class="chips" id="presetChips" role="group" aria-labelledby="lblPreset"></div>
+    </div>
+    <div class="mixer" id="mixer"></div>
+
+    <div class="rule"></div>
+    <h3>Play a video instead</h3>
+    <p class="hint">Plays through YouTube's own player. Some videos block playback outside YouTube.</p>
+    <ul class="tracks" id="tracks"></ul>
+    <form id="ytForm" class="yt-form">
+      <label class="sr-only" for="ytInput">YouTube link</label>
+      <input id="ytInput" type="url" placeholder="Paste a YouTube link" autocomplete="off">
+      <button class="btn btn-ghost" type="submit">Play</button>
+    </form>
+    <div id="ytWrap" class="yt-wrap" hidden>
+      <div id="ytPlayer"></div>
+      <div class="yt-controls">
+        <label class="slider"><span>Video volume</span><input id="ytVol" type="range" min="0" max="100" value="70"></label>
+        <button id="ytStop" class="btn btn-ghost" type="button">Stop video</button>
+      </div>
+    </div>
+    <p id="ytMsg" class="yt-msg" role="status" aria-live="polite"></p>
+  </aside>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
