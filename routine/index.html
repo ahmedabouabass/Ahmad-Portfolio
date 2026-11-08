@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="routine.css">
   <script src="atmosphere.js" defer></script>
   <script src="routine.js" defer></script>
+  <script src="coffee.js" defer></script>
   <script src="calendar.js" defer></script>
   <script src="i18n.js" defer></script>
 </head>
@@ -87,12 +88,14 @@
       <div class="coffee-order">
         <a class="back" href="#hub">Back to the ritual</a>
         <h1 id="coffee-title" tabindex="-1">What are you having?</h1>
+        <div class="cw-mood" id="coffeeMood" data-no-i18n></div>
         <ul class="drinks" id="drinks"></ul>
         <label class="check"><input type="checkbox" id="orderSound" checked><span>Play soft ambience with my order</span></label>
         <div class="actions">
           <button id="orderBtn" class="btn btn-primary" type="button">Place order</button>
           <a id="coffeeNext" class="btn btn-ghost" href="#breathe" hidden>Continue to breathing</a>
         </div>
+        <div class="cw-ways" id="coffeeWays" data-no-i18n></div>
       </div>
     </section>
 
